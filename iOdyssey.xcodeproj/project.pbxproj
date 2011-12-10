@@ -1,0 +1,264 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		653A2F02149311E8009598A4 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653A2F01149311E8009598A4 /* UIKit.framework */; };
+		653A2F04149311E8009598A4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653A2F03149311E8009598A4 /* Foundation.framework */; };
+		653A2F06149311E8009598A4 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 653A2F05149311E8009598A4 /* CoreGraphics.framework */; };
+		653A2F0C149311E8009598A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 653A2F0A149311E8009598A4 /* InfoPlist.strings */; };
+		653A2F0E149311E8009598A4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 653A2F0D149311E8009598A4 /* main.m */; };
+		653A2F12149311E8009598A4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 653A2F11149311E8009598A4 /* AppDelegate.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		653A2EFD149311E8009598A4 /* iOdyssey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOdyssey.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		653A2F01149311E8009598A4 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		653A2F03149311E8009598A4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		653A2F05149311E8009598A4 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		653A2F09149311E8009598A4 /* iOdyssey-Info.plist */ = {isa = PBXFileReference; path = "iOdyssey-Info.plist"; sourceTree = "<group>"; };
+		653A2F0B149311E8009598A4 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		653A2F0D149311E8009598A4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		653A2F0F149311E8009598A4 /* iOdyssey-Prefix.pch */ = {isa = PBXFileReference; path = "iOdyssey-Prefix.pch"; sourceTree = "<group>"; };
+		653A2F10149311E8009598A4 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		653A2F11149311E8009598A4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		653A2EFA149311E8009598A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				653A2F02149311E8009598A4 /* UIKit.framework in Frameworks */,
+				653A2F04149311E8009598A4 /* Foundation.framework in Frameworks */,
+				653A2F06149311E8009598A4 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		653A2EF2149311E8009598A4 = {
+			isa = PBXGroup;
+			children = (
+				653A2F07149311E8009598A4 /* iOdyssey */,
+				653A2F00149311E8009598A4 /* Frameworks */,
+				653A2EFE149311E8009598A4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		653A2EFE149311E8009598A4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				653A2EFD149311E8009598A4 /* iOdyssey.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		653A2F00149311E8009598A4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				653A2F01149311E8009598A4 /* UIKit.framework */,
+				653A2F03149311E8009598A4 /* Foundation.framework */,
+				653A2F05149311E8009598A4 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		653A2F07149311E8009598A4 /* iOdyssey */ = {
+			isa = PBXGroup;
+			children = (
+				653A2F10149311E8009598A4 /* AppDelegate.h */,
+				653A2F11149311E8009598A4 /* AppDelegate.m */,
+				653A2F08149311E8009598A4 /* Supporting Files */,
+			);
+			path = iOdyssey;
+			sourceTree = "<group>";
+		};
+		653A2F08149311E8009598A4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				653A2F09149311E8009598A4 /* iOdyssey-Info.plist */,
+				653A2F0A149311E8009598A4 /* InfoPlist.strings */,
+				653A2F0D149311E8009598A4 /* main.m */,
+				653A2F0F149311E8009598A4 /* iOdyssey-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		653A2EFC149311E8009598A4 /* iOdyssey */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 653A2F15149311E8009598A4 /* Build configuration list for PBXNativeTarget "iOdyssey" */;
+			buildPhases = (
+				653A2EF9149311E8009598A4 /* Sources */,
+				653A2EFA149311E8009598A4 /* Frameworks */,
+				653A2EFB149311E8009598A4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOdyssey;
+			productName = iOdyssey;
+			productReference = 653A2EFD149311E8009598A4 /* iOdyssey.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		653A2EF4149311E8009598A4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Kulitorum;
+			};
+			buildConfigurationList = 653A2EF7149311E8009598A4 /* Build configuration list for PBXProject "iOdyssey" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 653A2EF2149311E8009598A4;
+			productRefGroup = 653A2EFE149311E8009598A4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				653A2EFC149311E8009598A4 /* iOdyssey */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		653A2EFB149311E8009598A4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				653A2F0C149311E8009598A4 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		653A2EF9149311E8009598A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				653A2F0E149311E8009598A4 /* main.m in Sources */,
+				653A2F12149311E8009598A4 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		653A2F0A149311E8009598A4 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				653A2F0B149311E8009598A4 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		653A2F13149311E8009598A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		653A2F14149311E8009598A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		653A2F16149311E8009598A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iOdyssey/iOdyssey-Prefix.pch";
+				INFOPLIST_FILE = "iOdyssey/iOdyssey-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		653A2F17149311E8009598A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iOdyssey/iOdyssey-Prefix.pch";
+				INFOPLIST_FILE = "iOdyssey/iOdyssey-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		653A2EF7149311E8009598A4 /* Build configuration list for PBXProject "iOdyssey" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				653A2F13149311E8009598A4 /* Debug */,
+				653A2F14149311E8009598A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		653A2F15149311E8009598A4 /* Build configuration list for PBXNativeTarget "iOdyssey" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				653A2F16149311E8009598A4 /* Debug */,
+				653A2F17149311E8009598A4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 653A2EF4149311E8009598A4 /* Project object */;
+}
