@@ -79,6 +79,7 @@
 		65590989143B4B690041B2C9 /* systemIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 65590985143B4B690041B2C9 /* systemIcon.png */; };
 		6559098C143B4F080041B2C9 /* UILabelWithTopbarBG.m in Sources */ = {isa = PBXBuildFile; fileRef = 6559098B143B4F080041B2C9 /* UILabelWithTopbarBG.m */; };
 		65596BBB148D885F008D27EA /* UR.png in Resources */ = {isa = PBXBuildFile; fileRef = 65596BBA148D885F008D27EA /* UR.png */; };
+		656092BD149327B2003940B0 /* Stretchablepattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 656092BC149327B2003940B0 /* Stretchablepattern.png */; };
 		657F8F3013E2E8320022D47A /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 657F8F2F13E2E8320022D47A /* MainWindow_iPad.xib */; };
 		658E958F13F0848C0061BB6E /* EmptyBookingCell_iphone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 658E958E13F0848C0061BB6E /* EmptyBookingCell_iphone.xib */; };
 		658E959213F092F10061BB6E /* EmptyBookingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 658E959113F092F10061BB6E /* EmptyBookingCell.m */; };
@@ -227,6 +228,7 @@
 		6559098A143B4F080041B2C9 /* UILabelWithTopbarBG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILabelWithTopbarBG.h; sourceTree = "<group>"; };
 		6559098B143B4F080041B2C9 /* UILabelWithTopbarBG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILabelWithTopbarBG.m; sourceTree = "<group>"; };
 		65596BBA148D885F008D27EA /* UR.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UR.png; sourceTree = SOURCE_ROOT; };
+		656092BC149327B2003940B0 /* Stretchablepattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Stretchablepattern.png; path = Resources/Stretchablepattern.png; sourceTree = "<group>"; };
 		657F8F2F13E2E8320022D47A /* MainWindow_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MainWindow_iPad.xib; path = iPad/MainWindow_iPad.xib; sourceTree = "<group>"; };
 		658E958E13F0848C0061BB6E /* EmptyBookingCell_iphone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyBookingCell_iphone.xib; sourceTree = "<group>"; };
 		658E959013F092F10061BB6E /* EmptyBookingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EmptyBookingCell.h; sourceTree = "<group>"; };
@@ -505,8 +507,8 @@
 				057CAA0513B3EAD300F8EE47 /* ViewData.mm */,
 				05A9DC6913AD620A00CEECED /* Booking.mm */,
 				05A9DC6813AD620A00CEECED /* Booking.h */,
-				654A8DA513E048B600B62808 /* ColorData.mm */,
 				654A8DA413E048B600B62808 /* ColorData.h */,
+				654A8DA513E048B600B62808 /* ColorData.mm */,
 				651D41B213EA07CE00EB968B /* Consumables.h */,
 				651D41B313EA07CE00EB968B /* Consumables.m */,
 				65F55AA4143C7D040087EC36 /* ClientData.h */,
@@ -546,6 +548,7 @@
 		05FEA31413BA63DE00B6FA5B /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				656092BC149327B2003940B0 /* Stretchablepattern.png */,
 				65D8DE6B1469CF700072338F /* signedOff.png */,
 				65E94F2E143E1E690018984A /* patterntest.png */,
 				652FD2D8143E0C34000AD868 /* selectednoframe.png */,
@@ -761,6 +764,7 @@
 				65B740E0148E2944002EC0A3 /* UR_iPad.png in Resources */,
 				65B740E5148E3F07002EC0A3 /* EditableDateCell_iPad.xib in Resources */,
 				65B740E6148E3F07002EC0A3 /* EditableDateCell_iphone.xib in Resources */,
+				656092BD149327B2003940B0 /* Stretchablepattern.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

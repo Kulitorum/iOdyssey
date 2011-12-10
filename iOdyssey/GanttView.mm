@@ -1,16 +1,16 @@
-	//
-	//  GanttView.m
-	//  iSqlExample
-	//
-	//  Created by Michael Holm on 6/17/11.
-	//  Copyright 2011 __MyCompanyName__. All rights reserved.
-	//
+//
+//  GanttView.m
+//  iSqlExample
+//
+//  Created by Michael Holm on 6/17/11.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//
 
 #import "GanttView.h"
 #include <iostream>
 #include <sstream>
 
-	//#include "NSDate-Utilities.h"
+//#include "NSDate-Utilities.h"
 #import "SqlClient.h"
 #import "SqlResultSet.h"
 #import "SqlClientQuery.h"
@@ -55,7 +55,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 			{
             while ([resultSet moveNext])
 				{
-					// RE_KEY SRT_ORDER HEADER_TXT ITEM_TYPE RE_NAME START_DAY LEAVE_DAY GENERIC SITE_KEY RES_STAFF TYPE IS_CURRENT 
+				// RE_KEY SRT_ORDER HEADER_TXT ITEM_TYPE RE_NAME START_DAY LEAVE_DAY GENERIC SITE_KEY RES_STAFF TYPE IS_CURRENT 
 				
 				if( [resultSet getInteger:[resultSet indexForField:@"RE_KEY"]] == -1) // Header
 					{
@@ -86,7 +86,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 						name = [resultSet getString:[resultSet indexForField:@"RE_NAME"]];
 						}
 					Resource ting( name, [resultSet getInteger:[resultSet indexForField:@"RE_KEY"]]);
-
+					
 					if(ting.RE_KEY == AppDelegate->loginData.Login.RE_KEY)
 						{
 						bool hasMe=NO;
@@ -109,21 +109,21 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 				}
 			}
 		// make sure the current login resource is there too
-/*		bool hasMe=NO;
-		iOdysseyAppDelegate *asd = AppDelegate;
-		for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-			{
-			if(AppDelegate->viewData.Resources[i].RE_KEY == AppDelegate->loginData.Login.RE_KEY)
-				{
-				hasMe = YES;
-				break;
-				}
-			}
-		if(hasMe == NO) // Add me
-			{
-			Resource ting(AppDelegate->loginData.Login.FULL_NAME,AppDelegate->loginData.Login.RE_KEY);
-			AppDelegate->viewData.AddResource(ting);
-			}*/
+		/*		bool hasMe=NO;
+		 iOdysseyAppDelegate *asd = AppDelegate;
+		 for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
+		 {
+		 if(AppDelegate->viewData.Resources[i].RE_KEY == AppDelegate->loginData.Login.RE_KEY)
+		 {
+		 hasMe = YES;
+		 break;
+		 }
+		 }
+		 if(hasMe == NO) // Add me
+		 {
+		 Resource ting(AppDelegate->loginData.Login.FULL_NAME,AppDelegate->loginData.Login.RE_KEY);
+		 AppDelegate->viewData.AddResource(ting);
+		 }*/
 		} else {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network connection lost. Please try again." message:query.errorText delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];    [alert show];
 			[alert release];   
@@ -139,7 +139,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 }
 
 /*
-RE_KEY SRT_ORDER HEADER_TXT ITEM_TYPE RE_NAME START_DAY LEAVE_DAY GENERIC SITE_KEY IS_CURRENT 
+ RE_KEY SRT_ORDER HEADER_TXT ITEM_TYPE RE_NAME START_DAY LEAVE_DAY GENERIC SITE_KEY IS_CURRENT 
  --------
  33 | 101 | 1 | <null> | 0 | Flame / Nuke | 1999-03-01 00:00:00 +0000 | 2015-12-31 00:00:00 +0000 | 0 | 9999 | 1 | 
  33 | 102 | 2 | <null> | 0 | Flame  | 1999-03-01 00:00:00 +0000 | 2015-12-31 00:00:00 +0000 | 0 | 9999 | 1 | 
@@ -186,13 +186,13 @@ void DrawText(CGRect rect, CGContextRef context, float posX, float posY, NSStrin
 	CGContextSetFillColorWithColor(context, color);
 	CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
     
-		// Some initial setup for our text drawing needs.
-		// First, we will be doing our drawing in Helvetica-36pt with the MacRoman encoding.
-		// This is an 8-bit encoding that can reference standard ASCII characters
-		// and many common characters used in the Americas and Western Europe.
+	// Some initial setup for our text drawing needs.
+	// First, we will be doing our drawing in Helvetica-36pt with the MacRoman encoding.
+	// This is an 8-bit encoding that can reference standard ASCII characters
+	// and many common characters used in the Americas and Western Europe.
 	CGContextSelectFont(context, fontName.c_str(), fontSize, kCGEncodingMacRoman);
-		// Next we set the text matrix to flip our text upside down. We do this because the context itself
-		// is flipped upside down relative to the expected orientation for drawing text (much like the case for drawing Images & PDF).
+	// Next we set the text matrix to flip our text upside down. We do this because the context itself
+	// is flipped upside down relative to the expected orientation for drawing text (much like the case for drawing Images & PDF).
 	CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
 	
 	if(centered)
@@ -205,10 +205,10 @@ void DrawText(CGRect rect, CGContextRef context, float posX, float posY, NSStrin
 		posX=(posX - pt.x/2);
 		}
 	
-		// And now we actually draw some text. This screen will demonstrate the typical drawing modes used.
+	// And now we actually draw some text. This screen will demonstrate the typical drawing modes used.
 	CGContextSetTextDrawingMode(context, kCGTextFill);
 	
-//	[str drawAtPoint:CGPointMake(posX, posY+11) withFont:[UIFont fontWithName:@"Helvetica" size:11]];
+	//	[str drawAtPoint:CGPointMake(posX, posY+11) withFont:[UIFont fontWithName:@"Helvetica" size:11]];
 	[str drawAtPoint:CGPointMake(posX, posY+11) forWidth:rect.size.width-posX-5 withFont:[UIFont fontWithName:@"Helvetica" size:11] lineBreakMode:UILineBreakModeTailTruncation];
 	CGContextRestoreGState(context);
 }
@@ -222,14 +222,14 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
     CGFloat endComponents[4] = { r*0.7, g*0.7, b*0.7, a };
 	CGColorRef startColor = (CGColorRef)[(id)CGColorCreate(colorSpace, startComponents) autorelease];	
 	CGColorRef endColor = (CGColorRef)[(id)CGColorCreate(colorSpace, endComponents) autorelease];	
-
+	
     NSArray *array = [NSArray arrayWithObjects: (id)startColor, (id)endColor, nil];
     
     CGGradientRef gradient = CGGradientCreateWithColors (colorSpace, (CFArrayRef)array, NULL);
     CGPoint endPoint = rect.origin;
     endPoint.y += rect.size.height;
     
-		// Don't let the gradient bleed all over everything
+	// Don't let the gradient bleed all over everything
     CGContextSaveGState (context);
 	{
 	CGContextClipToRect (context, rect);
@@ -242,16 +242,16 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
 	CGColorRef frameColor = (CGColorRef)[(id)CGColorCreate(colorSpace, frameComponents) autorelease];	
     CGContextSetStrokeColorWithColor(context, frameColor);
     CGContextStrokeRect (context, rect);
-
+	
     CGGradientRelease (gradient);
-		//    CGColorRelease (startColor);
-		//    CGColorRelease (endColor);
+	//    CGColorRelease (startColor);
+	//    CGColorRelease (endColor);
 } // drawGradientInRect
 
 -(void) DrawDateGrid:(CGRect) rect withy:(float)y withColorSpace:(CGColorSpaceRef)colorSpace WithContext:(CGContextRef) context
 {
     float DateWindow = AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
-
+	
 	if(DateWindow < 0) 	return;// Bug fix - sometimes displayend is less then displaystart, and we end in a dead-end loop.
 	
 	float hours = DateWindow/3600;  // number of hours we want to draw
@@ -264,19 +264,19 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
     
     CGFloat theColor[4] = { 0.0, 0.0, 0.0, 0.1 };
     CGFloat theDayColor[4] = { 82.0/255, 82.0/255, 82.0/255, 1.0 };
-//	CGFloat theTopLineColor[4] = { 0.7, 0.8, 1, 1 };
-
+	//	CGFloat theTopLineColor[4] = { 0.7, 0.8, 1, 1 };
+	
 	CGColorRef gridColor = (CGColorRef)[(id)CGColorCreate(colorSpace, theColor) autorelease];	
 	CGColorRef DayColor = (CGColorRef)[(id)CGColorCreate(colorSpace, theDayColor) autorelease];	
-//	CGColorRef TopLineColor = (CGColorRef)[(id)CGColorCreate(colorSpace, theTopLineColor) autorelease];	
+	//	CGColorRef TopLineColor = (CGColorRef)[(id)CGColorCreate(colorSpace, theTopLineColor) autorelease];	
 	// Draw yellow square
-/*
-	CGContextSetFillColorWithColor(context, TopLineColor);
-	CGRect rectangle = CGRectMake(0,0,width,HOURLINEYSTART);
-	CGContextAddRect(context, rectangle);	
-	CGContextFillPath(context);
-*/	
-
+	/*
+	 CGContextSetFillColorWithColor(context, TopLineColor);
+	 CGRect rectangle = CGRectMake(0,0,width,HOURLINEYSTART);
+	 CGContextAddRect(context, rectangle);	
+	 CGContextFillPath(context);
+	 */	
+	
 	// Datebar (top bar) background
 	CGFloat bgColorTop[4] = { 11.0/255, 42.0/255, 85.0/255, 1.0 };
 	CGFloat bgColorBottom[4] = { 11.0/255, 42.0/255, 85.0/255, 1.0 };
@@ -285,7 +285,7 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
 	CGContextSaveGState(context);
 	CGRect rectangle = CGRectMake(RESOURCENAMEWIDTH,0,width,HOURLINEYSTART);
 	drawGradientWithGloss(context, rectangle, BGColorTop,  BGColorBottom);
-
+	
 	// behind year
 	CGFloat bgColorYear[4] = { 129.0/255, 146.0/255, 160.0/255, 1.0 };
 	CGColorRef BGColorYear = (CGColorRef)[(id)CGColorCreate(colorSpace, bgColorYear) autorelease];	
@@ -350,7 +350,7 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
 			CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
 			CGContextSetTextDrawingMode(context, kCGTextFill);
 			NSString *str = AppDelegate.displayStart.Midtday().DaysAfter(i).FormatForGanttView();
-
+			
 			// center
 			CGPoint pt;
 			CGContextSetTextDrawingMode(context, kCGTextInvisible);
@@ -366,14 +366,14 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
 		}
 	// Year....
 	CGContextRestoreGState(context);
-
+	
 	CGContextSetStrokeColorWithColor(context, DayColor); // fat line
     CGContextMoveToPoint(context, 0, HOURLINEYSTART);
     CGContextAddLineToPoint(context, AppDelegate.ganttDisplayWidth, HOURLINEYSTART);
     CGContextStrokePath(context);
 	
 	NSString *aString = [NSString stringWithFormat:@"%@ %d", AppDelegate.displayStart.MonthValue(), AppDelegate.displayStart.YearValue()];
-
+	
 	CGContextSaveGState(context);
 	CGContextSetShadow(context, CGSizeMake(0, 2), 2);
 	DrawText(rect, context, RESOURCENAMEWIDTH/2, (HOURLINEYSTART*0.5)-18, aString, "Helvetica", 14, rect, true, WHITE_COLOR);
@@ -407,7 +407,7 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 	CGRect rectangle = CGRectMake(0,yStart,RESOURCENAMEWIDTH,y-yStart);
 	if(res.RE_KEY == -1)									// a header
 		drawGradientInRect(rectangle, colorspace, context, 0.6, 0.8, 1.0, 1.0);
-
+	
 	bool BlueText=YES;
 	
 	if(res.RE_KEY == AppDelegate->loginData.Login.RE_KEY)	// the patron that's logged in
@@ -417,44 +417,44 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 		CGColorRef overlayColor = (CGColorRef)[(id)CGColorCreate(colorspace, ovrColor) autorelease];	
 		CGContextSetFillColorWithColor(context,  overlayColor);
 		CGContextFillRect (context, rectangle);
-/*
-		// draw gloss
-		drawGradientInRect(rectangle, colorspace, context, 0.6, 0.8, 1.0, 0.1);
-		CGColorRef glossColor1 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.1].CGColor;
-		CGColorRef glossColor2 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.46].CGColor;
-		CGColorRef glossColor3 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.2].CGColor;
-		CGRect topHalf = CGRectMake(rectangle.origin.x, rectangle.origin.y, rectangle.size.width, rectangle.size.height/2);
-		drawLinearGradient(context, topHalf, glossColor1, glossColor2);
-		CGRect bottomHalf = CGRectMake(rectangle.origin.x, rectangle.origin.y+rectangle.size.height/2, rectangle.size.width, rectangle.size.height/2);
-		drawLinearGradient(context, bottomHalf, glossColor1, glossColor3);
-		CGContextRestoreGState(context);
-*/
+		/*
+		 // draw gloss
+		 drawGradientInRect(rectangle, colorspace, context, 0.6, 0.8, 1.0, 0.1);
+		 CGColorRef glossColor1 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.1].CGColor;
+		 CGColorRef glossColor2 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.46].CGColor;
+		 CGColorRef glossColor3 = [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.2].CGColor;
+		 CGRect topHalf = CGRectMake(rectangle.origin.x, rectangle.origin.y, rectangle.size.width, rectangle.size.height/2);
+		 drawLinearGradient(context, topHalf, glossColor1, glossColor2);
+		 CGRect bottomHalf = CGRectMake(rectangle.origin.x, rectangle.origin.y+rectangle.size.height/2, rectangle.size.width, rectangle.size.height/2);
+		 drawLinearGradient(context, bottomHalf, glossColor1, glossColor3);
+		 CGContextRestoreGState(context);
+		 */
 		BlueText=NO;
 		}
 	res.pickRectangle = rectangle;
 	rect.size.width = RESOURCENAMEWIDTH;
 	DrawText(rect, context, 5, ((y+yStart)/2)-18, res.RE_NAME , "Helvetica", 9, rectangle, false, BlueText == YES ? BLUE_TEXT_COLOR : BLACK_COLOR);
-
+	
 	// Selected
 	res.selectRectangle = CGRectMake(RESOURCENAMEWIDTH-50,yStart,50,y-yStart);
-
-//	CGRect drawRect = CGRectMake(RESOURCENAMEWIDTH-35,yStart,35,y-yStart);
+	
+	//	CGRect drawRect = CGRectMake(RESOURCENAMEWIDTH-35,yStart,35,y-yStart);
 	CGPoint drawPoint = CGPointMake(RESOURCENAMEWIDTH-30,((y+yStart)/2)-12);
 	if(res.Selected)
 		{
-//		CGContextStrokeRect (context, drawRect);
-//		[selectedResourceImage setOverlayColor:[UIColor blueColor]];
+		//		CGContextStrokeRect (context, drawRect);
+		//		[selectedResourceImage setOverlayColor:[UIColor blueColor]];
 		[selectedResourceImage drawAtPoint:drawPoint]; // the selected icon
 		}
 	
-/*	
-	CGFloat selectedColorArray[4] = { res.Selected,1-res.Selected,0, 0.1 };
-	CGColorRef selectedColor = (CGColorRef)[(id)CGColorCreate(colorspace, selectedColorArray) autorelease];	
-	CGContextSetFillColorWithColor(context,  selectedColor);
-	CGContextFillRect (context, res.selectRectangle);
- */
-
-
+	/*	
+	 CGFloat selectedColorArray[4] = { res.Selected,1-res.Selected,0, 0.1 };
+	 CGColorRef selectedColor = (CGColorRef)[(id)CGColorCreate(colorspace, selectedColorArray) autorelease];	
+	 CGContextSetFillColorWithColor(context,  selectedColor);
+	 CGContextFillRect (context, res.selectRectangle);
+	 */
+	
+	
 	if(AppDelegate->ganttviewcontroller.isCreatingNewBooking)
 		{
 		for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
@@ -473,14 +473,14 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 				asd.Resource = @"";
 				asd.NAME = @"";
 				asd.ACTIVITY = @"";
-
+				
 				CGRect slotRect = rect;
 				slotRect.size.width = AppDelegate->ganttDisplayWidth;
 				
 				AppDelegate->ganttviewcontroller.isCreatingNewBooking=NO;	// Trick colors
 				DrawBooking(slotRect, asd, yStart, y-yStart-5, context, colorspace, &asd.pickRectangle);
 				AppDelegate->ganttviewcontroller.isCreatingNewBooking=YES;	// Trick colors
-
+				
 				NSString *StartTime = asd.FROM_TIME.FormatForNewBooking();
 				CGPoint pt;
 				CGContextSetTextDrawingMode(context, kCGTextInvisible);
@@ -488,12 +488,12 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 				[StartTime drawAtPoint:CGPointMake(0, 0) withFont:font];
 				pt = CGContextGetTextPosition(context);
 				CGContextSetTextDrawingMode(context, kCGTextFill);
-
+				
 				// Draw start time BG
 					{
 					float radius=3;
 					CGRect rect=asd.pickRectangle;
-//					rect.origin.y -= 15;
+					//					rect.origin.y -= 15;
 					rect.origin.x -= pt.x+15;
 					rect.size.width = pt.x+10;
 					rect.size.height = 18;
@@ -547,7 +547,7 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 				}
 			}
 		}
-
+	
 }
 
 void drawLinearGradient(CGContextRef context, CGRect rect, CGColorRef startColor, CGColorRef  endColor)
@@ -588,7 +588,7 @@ void drawGradientWithGloss(CGContextRef context, CGRect rect, CGColorRef startCo
 void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, CGRect *drawRectangle)
 {
 	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt->RESOURCENAMEWIDTH;
-
+	
     float width = rectangle.size.width;
     float graphWidth = width-RESOURCENAMEWIDTH;
     Date startTime = book.FROM_TIME;
@@ -596,44 +596,44 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	
 	Date dStart = AppDelegate.displayStart;
 	Date dEnd = AppDelegate.displayEnd;
-
+	
 	// Manupulate dStart and dEnd if AppDelegate.ganttDisplayStyle == 0 (8 hours)
-
+	
     Date displayWidth = dEnd-dStart;
     Date BookingStart = book.FROM_TIME - dStart;
     Date BookingEnd = book.TO_TIME - dStart;
-
+	
 	/*
-	if(AppDelegate.ganttDisplayStyle == 0)
-		{
-		// if the display spans more then 1 day, check if the booking is valid inside what days.
-		if(BookingStart.HourValue() < 7)
-			{
-			
-			}
-		if(BookingEnd.HourValue() > 18)stu
-			{
-			
-			}
-		}
-	*/
+	 if(AppDelegate.ganttDisplayStyle == 0)
+	 {
+	 // if the display spans more then 1 day, check if the booking is valid inside what days.
+	 if(BookingStart.HourValue() < 7)
+	 {
+	 
+	 }
+	 if(BookingEnd.HourValue() > 18)stu
+	 {
+	 
+	 }
+	 }
+	 */
 	
 	double DayNrStart = (double)BookingStart.nstimeInterval() / 86400.0;	// 2.42 = 0.42 into day 2
 	double DayNrEnd = (double)BookingEnd.nstimeInterval() / 86400.0;	// 2.42 = 0.42 into day 2
-
+	
 	double displayHourStart = 8.0/24.0;
 	double displayHourEnd = 18.0/24.0;
-
+	
 	double displayHourMult = 1.0f/(displayHourEnd-displayHourStart);
 	
 	if(AppDelegate.ganttDisplayStyle == 0) //8h
 		{
 		int dayS = floor(DayNrStart);
 		double HourS = ((DayNrStart-dayS)-displayHourStart)*displayHourMult;
-
+		
 		int dayE = floor(DayNrEnd);
 		double HourE = ((DayNrEnd-dayE)-displayHourStart)*displayHourMult;
-
+		
 		if(HourS > 1) return;	// start after display end, skip
 		if(HourE < 0) return;	// end is before display start, skip
 		
@@ -647,17 +647,17 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		DayNrStart = dayS+HourS;
 		DayNrEnd = dayE+HourE;
 		}
-
-/*	
-	double tStart = (double)BookingStart.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
-	double tEnd = (double)BookingEnd.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
-*/
+	
+	/*	
+	 double tStart = (double)BookingStart.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
+	 double tEnd = (double)BookingEnd.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
+	 */
 	
 	double tStart = DayNrStart/((double)displayWidth.nstimeInterval()/86400);
 	double tEnd = DayNrEnd/((double)displayWidth.nstimeInterval()/86400);
 	
 	if(tStart > 1 || tEnd<0)	return;// booking outside display scope
-        
+	
 	if(tStart < 0)				// If before display start, hack it.
 		tStart = 0;
     if(tEnd > 1)				// if end after display end, hack it
@@ -672,7 +672,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		*drawRectangle=rect;// output BBox for touch recognition
 	
 	ColorInfo *myColor = [AppDelegate.colorData GetColor:book.STATUS withPCODE:book.pcode];
-
+	
 	if(AppDelegate->ganttviewcontroller.isCreatingNewBooking)
 		[[UIColor colorWithRed:0.6 green:0.6 blue:0.6 alpha:1.0] setFill];
 	else
@@ -681,8 +681,46 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	float radius=3.0f;
 	// Build shape
 	
-	if(AppDelegate.ganttFastDraw)
-		[patternTestImage drawInRect:rect];
+	if(1 || AppDelegate.ganttFastDraw)
+		{
+		[[UIColor colorWithRed:1 green:1 blue:1 alpha:1.0] setFill];
+
+		CGContextBeginPath(context);
+		CGContextMoveToPoint(context, CGRectGetMinX(rect) + radius, CGRectGetMinY(rect));
+		CGContextAddArc(context, CGRectGetMaxX(rect) - radius, CGRectGetMinY(rect) + radius, radius, 3 * M_PI / 2, 0, 0);
+		CGContextAddArc(context, CGRectGetMaxX(rect) - radius, CGRectGetMaxY(rect) - radius, radius, 0, M_PI / 2, 0);
+		CGContextAddArc(context, CGRectGetMinX(rect) + radius, CGRectGetMaxY(rect) - radius, radius, M_PI / 2, M_PI, 0);
+		CGContextAddArc(context, CGRectGetMinX(rect) + radius, CGRectGetMinY(rect) + radius, radius, M_PI, 3 * M_PI / 2, 0);	
+		CGContextClosePath(context);
+		CGContextSaveGState(context);
+		CGPoint startPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMinY(rect));
+		CGPoint endPoint = CGPointMake(CGRectGetMidX(rect), CGRectGetMaxY(rect));
+		CGContextClip(context);
+		if(myColor->normalGradient!=0)
+			CGContextDrawLinearGradient(context, myColor->normalGradient, startPoint, endPoint, 0);
+		else
+			int a=0;
+		CGContextRestoreGState(context);
+		
+		if(book.BOKEYSELECTED)
+			{
+			CGContextMoveToPoint(context, rect.origin.x, rect.origin.y + radius);
+			CGContextAddLineToPoint(context, rect.origin.x, rect.origin.y + rect.size.height - radius);
+			CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + rect.size.height - radius, radius, M_PI, M_PI / 2, 1); //STS fixed
+			CGContextAddLineToPoint(context, rect.origin.x + rect.size.width - radius, rect.origin.y + rect.size.height);
+			CGContextAddArc(context, rect.origin.x + rect.size.width - radius, rect.origin.y + rect.size.height - radius, radius, M_PI / 2, 0.0f, 1);
+			CGContextAddLineToPoint(context, rect.origin.x + rect.size.width, rect.origin.y + radius);
+			CGContextAddArc(context, rect.origin.x + rect.size.width - radius, rect.origin.y + radius, radius, 0.0f, -M_PI / 2, 1);
+			CGContextAddLineToPoint(context, rect.origin.x + radius, rect.origin.y);
+			CGContextAddArc(context, rect.origin.x + radius, rect.origin.y + radius, radius, -M_PI / 2, M_PI, 1);
+			CGContextSaveGState(context);
+			[[UIColor colorWithRed:1 green:0 blue:0 alpha:1.0] setStroke];
+			CGContextSetLineWidth(context, 4.0);
+			CGContextStrokePath(context);
+			CGContextRestoreGState(context);
+			}
+		
+		}
 	else
 		{
 		CGContextMoveToPoint(context, rect.origin.x, rect.origin.y + radius);
@@ -728,19 +766,19 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		
 		}
 	
-//	CGContextFillRect (context, rect);
-		// frame it / outline
-//    CGContextSetStrokeColorWithColor(context, BLACK_COLOR);
-//    CGContextStrokeRect (context, rectangle);
-
+	//	CGContextFillRect (context, rect);
+	// frame it / outline
+	//    CGContextSetStrokeColorWithColor(context, BLACK_COLOR);
+	//    CGContextStrokeRect (context, rectangle);
+	
 	/*
-    if ([book.TYPE compare:@"S"] == NSOrderedSame)
-		drawGradientInRect(rectangle, colorspace, context, 0.3, 0.8, 0.7, 1);
-    else
-        drawGradientInRect(rectangle, colorspace, context, 0.6, 0.8, 0.7, 1);
-	*/
-		// Type client on top
-
+	 if ([book.TYPE compare:@"S"] == NSOrderedSame)
+	 drawGradientInRect(rectangle, colorspace, context, 0.3, 0.8, 0.7, 1);
+	 else
+	 drawGradientInRect(rectangle, colorspace, context, 0.6, 0.8, 0.7, 1);
+	 */
+	// Type client on top
+	
 	CGContextSaveGState(context);
 	CGContextClipToRect (context, rect);
 	CGFloat theTextColor[4] = { 1.0, 1.0, 1.0, 1.0 };
@@ -750,12 +788,12 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
 	CGContextSetTextDrawingMode(context, kCGTextFill);
 	UIFont * font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:10];
-
+	
 	y+=3;
 	
     CGColorRef textShadowColor = [UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.1].CGColor;
 	CGContextSetShadowWithColor(context, CGSizeMake(0, -1), 0, textShadowColor);
-
+	
 	if(AppDelegate.ganttDisplaySmallLarge && AppDelegate->ganttviewcontroller.isCreatingNewBooking == NO)
 		{
 		NSString* status;
@@ -805,35 +843,35 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		[book.ACTIVITY drawAtPoint:P withFont:font];	P.y+=12;
 		[book.NAME drawAtPoint:P withFont:font];		P.y+=12;
 		
-//		[cellText drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		//		[cellText drawAtPoint:CGPointMake(xs+3, y) withFont:font];
 		}
+	else
+		{
+		if(AppDelegate.GanttSlotNamesStyle == BOOKINGNAMESTYLE)
+			[book.NAME drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		else if(AppDelegate.GanttSlotNamesStyle == PROJECTSTYLE)
+			[book.Folder_name drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		else if(AppDelegate.GanttSlotNamesStyle == ACTIVITYSTYLE)
+			[book.ACTIVITY drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		else if(AppDelegate.GanttSlotNamesStyle == CLIENTSTYLE)
+			[book.CL_NAME drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		else if(AppDelegate.GanttSlotNamesStyle == BOOKINGIDSTYLE)
+			[[NSString stringWithFormat:@"%d",book.BO_KEY] drawAtPoint:CGPointMake(xs+3, y) withFont:font];
 		else
-			{
-			if(AppDelegate.GanttSlotNamesStyle == BOOKINGNAMESTYLE)
-				[book.NAME drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			else if(AppDelegate.GanttSlotNamesStyle == PROJECTSTYLE)
-				[book.Folder_name drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			else if(AppDelegate.GanttSlotNamesStyle == ACTIVITYSTYLE)
-				[book.ACTIVITY drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			else if(AppDelegate.GanttSlotNamesStyle == CLIENTSTYLE)
-				[book.CL_NAME drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			else if(AppDelegate.GanttSlotNamesStyle == BOOKINGIDSTYLE)
-				[[NSString stringWithFormat:@"%d",book.BO_KEY] drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			else
-				[@"ERROR" drawAtPoint:CGPointMake(xs+3, y) withFont:font];
-			}
+			[@"ERROR" drawAtPoint:CGPointMake(xs+3, y) withFont:font];
+		}
 	CGContextRestoreGState(context);
 }
 
 
 
-	// Only override drawRect: if you perform custom drawing.
-	// An empty implementation adversely affects performance during animation.
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
-
+	
 	if(needsInit)
 		{
 		if(AppDelegate.IsIpad)
@@ -857,29 +895,30 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	if(selectedResourceImage == nil)
 		selectedResourceImage = [[UIImage imageNamed:@"selectednoframe.png"] retain];
 	if(patternTestImage==nil)
-		patternTestImage = [[UIImage imageNamed:@"patterntest.png"] retain];
-
+		//		patternTestImage = [[UIImage imageNamed:@"Stretchablepattern.png"] retain];
+		patternTestImage=[[[UIImage imageNamed:@"Stretchablepattern.png"] stretchableImageWithLeftCapWidth: 15 topCapHeight: 10] retain];
+	
 	AppDelegate.ganttDisplayWidth = rect.size.width;
 	AppDelegate.ganttDisplayHeight = rect.size.height;
-
+	
 	// Behind dates and hours
-/*
- CGFloat bgColor[4] = { .9,.9,.9, 1.0 };
-    CGColorRef BGColor = CGColorCreate (colorspace, bgColor);
-	CGContextSetFillColorWithColor(context,  BGColor);
-	CGRect clippingRectTop = CGRectMake(0,0,rect.size.width,29);
-    CGContextFillRect (context, clippingRectTop);
-	
-	
-	CGFloat bgColorTop[4] = { 11/255, 42/255, 85/255, 1.0 };
-    CGColorRef BGColorTop = CGColorCreate (colorspace, bgColorTop);
-	CGFloat bgColorBottom[4] = { 11/255, 42/255, 85/255, 1.0 };
-    CGColorRef BGColorBottom = CGColorCreate (colorspace, bgColorBottom);
-	CGContextSaveGState(context);
-	CGRect clippingRectTop = CGRectMake(0,0,rect.size.width,29);
-	drawGradientWithGloss(context, clippingRectTop, BGColorTop,  BGColorBottom);
-	CGContextRestoreGState(context);
-*/
+	/*
+	 CGFloat bgColor[4] = { .9,.9,.9, 1.0 };
+	 CGColorRef BGColor = CGColorCreate (colorspace, bgColor);
+	 CGContextSetFillColorWithColor(context,  BGColor);
+	 CGRect clippingRectTop = CGRectMake(0,0,rect.size.width,29);
+	 CGContextFillRect (context, clippingRectTop);
+	 
+	 
+	 CGFloat bgColorTop[4] = { 11/255, 42/255, 85/255, 1.0 };
+	 CGColorRef BGColorTop = CGColorCreate (colorspace, bgColorTop);
+	 CGFloat bgColorBottom[4] = { 11/255, 42/255, 85/255, 1.0 };
+	 CGColorRef BGColorBottom = CGColorCreate (colorspace, bgColorBottom);
+	 CGContextSaveGState(context);
+	 CGRect clippingRectTop = CGRectMake(0,0,rect.size.width,29);
+	 drawGradientWithGloss(context, clippingRectTop, BGColorTop,  BGColorBottom);
+	 CGContextRestoreGState(context);
+	 */
 	CGContextSetTextDrawingMode(context, kCGTextFill);
 	// Behind resource names
 	CGFloat bgColor[4] = { 197.0/255, 204.0/255, 202.0/255, 1.0 };
@@ -902,9 +941,9 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
     Date start = AppDelegate.displayStart;
     Date end =   AppDelegate.displayEnd;
 	
-
+	
 	[self DrawDateGrid:rect withy:HOURLINEYSTART withColorSpace:colorspace WithContext:context];
-
+	
 	bool JustDrewAHeader=false;
 	
     float y=HOURLINEYSTART-AppDelegate.displayStartY+5;
@@ -983,16 +1022,16 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		}
 	
 	AppDelegate.ganttResourcesSizeY = y + AppDelegate.displayStartY;						// Needed for scroll-stop
-
+	
 	CGContextRestoreGState(context);
-
+	
 	// Draw LEFT edge line
     CGContextSetLineWidth(context, 2.0);
 	CGContextSetStrokeColorWithColor(context, GREY_COLOR);
     CGContextMoveToPoint(context, RESOURCENAMEWIDTH, 0);
     CGContextAddLineToPoint(context, RESOURCENAMEWIDTH, rect.size.height);
     CGContextStrokePath(context);
-
+	
     CGColorSpaceRelease(colorspace);
 }
 
@@ -1004,7 +1043,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	[patternTestImage release];
 	selectedResourceImage=nil;
 	patternTestImage=nil;
-
+	
     [super dealloc];
 }
 

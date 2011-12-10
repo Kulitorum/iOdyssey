@@ -397,7 +397,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="IBUILabel" id="777638179">
 							<reference key="NSNextResponder" ref="7880102"/>
-							<int key="NSvFlags">256</int>
+							<int key="NSvFlags">258</int>
 							<string key="NSFrameSize">{320, 41}</string>
 							<reference key="NSSuperview" ref="7880102"/>
 							<reference key="NSWindow"/>
@@ -2869,7 +2869,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="Home:">id</string>
 						<string key="RequestBookingData">id</string>
-						<string key="ShowClientsViewController">id</string>
 						<string key="ShowCombinationPopup:">id</string>
 						<string key="ShowMyBookings:">id</string>
 						<string key="StartNewBooking">id</string>
@@ -2883,10 +2882,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 						</object>
 						<object class="IBActionInfo" key="RequestBookingData">
 							<string key="name">RequestBookingData</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="ShowClientsViewController">
-							<string key="name">ShowClientsViewController</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="ShowCombinationPopup:">

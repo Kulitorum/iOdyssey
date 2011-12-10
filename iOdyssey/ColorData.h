@@ -16,6 +16,17 @@ using namespace std;
 class ColorInfo
 {
 public:
+	ColorInfo(){
+		COLOR_RED = 255;
+		COLOR_GREEN = 0;
+		COLOR_BLUE = 0;
+		normalGradient=highlightGradient=nil;
+		buildGradients();
+	}
+	~ColorInfo(){
+		CGGradientRelease(normalGradient);
+		CGGradientRelease(highlightGradient);
+	}
 	int SSC_KEY;
 	int SUB_KEY;
 	NSString *SSC_NAME;
@@ -26,6 +37,11 @@ public:
 	int COLOR2;
 	CStatus STATUS;
 	CGColorRef COLOR;
+	
+    CGGradientRef   normalGradient;
+    CGGradientRef   highlightGradient;	
+
+	void buildGradients();
 };
 
 //enum PCODE{P_UNKNOWN, P_OPEN, P_ACTUAL, P_PROFORMA, P_INVOICED, P_GRATIS};

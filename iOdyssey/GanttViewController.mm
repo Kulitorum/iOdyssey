@@ -973,11 +973,19 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	if(isShowingMyBookings)// || isShowingBookingDetailView)
 		return;
 	isShowingMyBookings=YES;
+	NSLog(@"isShowingMyBookings = YES");
 	[self presentModalViewController:AppDelegate.MyBookingsAndDrillDown animated:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+	NSLog(@"isShowingMyBookings 2 = NO");
+	isShowingMyBookings=NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
+	NSLog(@"isShowingMyBookings 1 = NO");
 	isShowingMyBookings=NO;
 //	[self.gantt setNeedsDisplay];
 //	[self.gantt setNeedsLayout];
@@ -1009,23 +1017,6 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-/*	switch (toInterfaceOrientation)
-	{
-		case UIInterfaceOrientationPortrait:
-		case UIInterfaceOrientationPortraitUpsideDown:
-		if([AppDelegate isDoneGettingInitData] == NO)
-			[self ShowMyBookings:NO];
-		else 
-			[self ShowMyBookings:YES];
-		return;
-		break;
-		
-		case UIInterfaceOrientationLandscapeLeft:
-		case UIInterfaceOrientationLandscapeRight:
-		[self.gantt setNeedsDisplay];
-		return;
-		break;
-	}*/
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation

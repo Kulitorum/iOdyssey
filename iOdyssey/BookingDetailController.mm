@@ -48,10 +48,11 @@ using namespace std;
 			}
 		else
 			[self dismissModalViewControllerAnimated :YES];
-
 		}
 	else
 		[self.navigationController popViewControllerAnimated:YES];
+
+	AppDelegate.ganttviewcontroller->isShowingBookingDetailView =NO;
 }
 
 
