@@ -24,10 +24,6 @@ Date::Date(NSString *date)
 //	NSString *hackedString = [date stringByReplacingOccurrencesOfString:@"+0000" withString:@"+0200"];
     NSDate *theDate = [AppDelegate.formatter dateFromString:date]; //2011-01-02 09:00:00 +0000
 	referenceTime = [theDate timeIntervalSinceReferenceDate];
-	
-	NSDate* asd= nsdate();
-	
-	int a=0;
 }
 
 Date::Date (NSDate *date)

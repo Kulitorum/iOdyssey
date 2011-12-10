@@ -262,9 +262,7 @@ int lastPickedResource;
 	
 	/*	NSString *request = [NSString stringWithFormat:@"SELECT * FROM  vw_staff_schedule WHERE (RV_KEY = %d OR (RE_KEY = %d AND RV_KEY = 33)) AND FROM_TIME BETWEEN '%@' AND '%@' AND SITE_KEY = %d AND IS_CURRENT=1", AppDelegate.SelectedCombination, AppDelegate->loginData.Login.RE_KEY, AppDelegate.displayStart.DaysBefore(AppDelegate.DataScopeBack).FormatForSQL(), AppDelegate.displayEnd.DaysAfter(AppDelegate.DataScopeForward).FormatForSQL(), AppDelegate->loginData.Login.SITE_KEY];
 	 */
-	
-	iOdysseyAppDelegate *asd = AppDelegate;
-	
+
 	AppDelegate.dataScopeStart = AppDelegate.displayStart.DaysBefore(AppDelegate.DataScopeBack);
 	AppDelegate.dataScopeEnd = AppDelegate.displayEnd.DaysAfter(AppDelegate.DataScopeForward);
 	
@@ -992,7 +990,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	if(isShowingMyBookings)// || isShowingBookingDetailView)
 		return;
 	isShowingMyBookings=YES;
-	[self presentModalViewController:AppDelegate.MyBookingsAndDrillDown animated:YES];
+	[self presentModalViewController:AppDelegate.MyBookingsAndDrillDown animated:animated];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -1014,7 +1012,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	NSLog(@"GanttViewController:shouldAutorotateToInterfaceOrientation");
 
 	if([AppDelegate isDoneGettingInitData] == NO)
-		return NO;
+		return YES;
 	if(UIInterfaceOrientationIsLandscape(interfaceOrientation))
 		{
 		return YES;

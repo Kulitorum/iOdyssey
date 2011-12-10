@@ -203,7 +203,7 @@ iOdysseyAppDelegate* AppDelegate;
 	[ganttviewcontroller ResizeToolbar];
 	self.window.rootViewController = self.ganttviewcontroller;
 	
-	[self.window addSubview:viewController.view]; // gantt and mybookings
+	[self.window addSubview:ganttviewcontroller.view]; // gantt and mybookings
 	[self.window addSubview:splashView];		  // splash
 	[self.window makeKeyAndVisible];
 	viewDataController = [[ViewDataController alloc] init];
@@ -239,7 +239,8 @@ iOdysseyAppDelegate* AppDelegate;
 			clientSearchController = [[SearchableUITableViewController alloc] init];
 			[clientSearchController initData];
 			[viewDataController start];
-			for (UIView *subview in [self.window subviews])
+
+		for (UIView *subview in [self.window subviews])
 				{
 				// Only remove the subviews with tag is equal to 1
 				if (subview.tag == 9999)
