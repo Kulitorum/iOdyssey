@@ -1,0 +1,93 @@
+// !$*UTF8*$!
+{
+	05347FAA13AE3970004AE7D5 /* iOdyssey */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = iOdyssey;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	05347FC013AE398F004AE7D5 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	05347FC113AE398F004AE7D5 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+	05A9DC2E13AD60BD00CEECED /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 05347FAA13AE3970004AE7D5 /* iOdyssey */;
+		activeTarget = 05A9DC3613AD60BD00CEECED /* iOdyssey */;
+		codeSenseManager = 05347FC113AE398F004AE7D5 /* Code sense */;
+		executables = (
+			05347FAA13AE3970004AE7D5 /* iOdyssey */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					1382,
+					20,
+					48,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 330702662;
+			PBXWorkspaceStateSaveDate = 330702662;
+		};
+		sourceControlManager = 05347FC013AE398F004AE7D5 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	05A9DC3613AD60BD00CEECED /* iOdyssey */ = {
+		activeExec = 0;
+		executables = (
+			05347FAA13AE3970004AE7D5 /* iOdyssey */,
+		);
+	};
+	05A9DC4313AD60BE00CEECED /* iOdyssey-Info.plist */ = {
+		uiCtxt = {
+			sepNavWindowFrame = "{{288, 184}, {1051, 872}}";
+		};
+	};
+}

@@ -2,17 +2,16 @@
 //  main.m
 //  iOdyssey
 //
-//  Created by Michael Holm on 12/10/11.
-//  Copyright (c) 2011 Kulitorum. All rights reserved.
+//  Created by Michael Holm on 6/19/11.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-#import "AppDelegate.h"
-
 int main(int argc, char *argv[])
 {
-	@autoreleasepool {
-	    return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
-	}
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    int retVal = UIApplicationMain(argc, argv, nil, nil);
+    [pool release];
+    return retVal;
 }

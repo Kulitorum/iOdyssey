@@ -1,0 +1,1 @@
+The EXECUTE permission was denied on the object 'SP_UPDATE_BK_REMARK' database 'DEV2012', schema 'dbo'.
