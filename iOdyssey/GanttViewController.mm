@@ -33,16 +33,8 @@ enum DragMode{DragModeMoveStart, DragModeMoveEnd, DragModeMoveBooking, NotDraggi
 DragMode BookingDragMode = NotDragging;	// NO=start, YES=end
 int lastPickedResource;
 
--(void)ShowClientsViewController
-{
-	NSLog(@"ShowClientsViewController");
-	[self presentModalViewController:AppDelegate.newBookingControlller animated:NO];
-}
-
 - (void)changeDate:(UIDatePicker *)sender
 {
-	DLog(@"About to update datePicker");
-	DLog(@"New Date: %@", sender.date);
 	pickedDate=[[sender.date copy] retain];
 }
 
@@ -177,7 +169,7 @@ int lastPickedResource;
 	 }
 */	
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlelongPressGesture:)];
-    longPressRecognizer.minimumPressDuration = 1;
+    longPressRecognizer.minimumPressDuration = 0.5;
     longPressRecognizer.numberOfTouchesRequired = 1;
     [self.gantt addGestureRecognizer:longPressRecognizer];
     [longPressRecognizer release];
@@ -426,13 +418,6 @@ bool BookingSortPredicate(const Booking& d1, const Booking& d2)
 				
 				book.FROM_TIME = Date([resultSet getDate:FROM_TIME]);
 				book.TO_TIME = Date([resultSet getDate:TO_TIME]);
-				
-				if(book.BO_KEY==198433)
-					{
-					NSLog(@"Start: %@", book.FROM_TIME.FormatForSQLWithTime());
-					NSLog(@"  End: %@", book.TO_TIME.FormatForSQLWithTime());
-					}
-
 				
 				book.FIRST_NAME = [[resultSet getString:FIRST_NAME] copy];
 				if ( ! [book.FIRST_NAME isKindOfClass:[NSString class]])
@@ -985,8 +970,6 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 -(IBAction) ShowMyBookings:(bool)animated
 {
-	cout << "ShowMyBookings: presentModalViewController:MyBookingsAndDrillDown" << endl;
-
 	if(isShowingMyBookings)// || isShowingBookingDetailView)
 		return;
 	isShowingMyBookings=YES;
@@ -995,10 +978,9 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 -(void)viewWillAppear:(BOOL)animated
 {
-	NSLog(@"GanttViewController:viewWIllAppear");
 	isShowingMyBookings=NO;
-	[self.gantt setNeedsDisplay];
-	[self.gantt setNeedsLayout];
+//	[self.gantt setNeedsDisplay];
+//	[self.gantt setNeedsLayout];
 }
 
 -(BOOL)automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers
@@ -1009,10 +991,11 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-	NSLog(@"GanttViewController:shouldAutorotateToInterfaceOrientation");
-
+	// not done starting
 	if([AppDelegate isDoneGettingInitData] == NO)
 		return YES;
+	// Approve landscape
+	
 	if(UIInterfaceOrientationIsLandscape(interfaceOrientation))
 		{
 		return YES;
@@ -1020,15 +1003,13 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	if(isShowingBookingDetailView)
 		return NO;
 		
-	[self ShowMyBookings:NO];
+	[self ShowMyBookings:YES];
 	return NO;
 }
 
 -(void) willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	cout << "Will: " << toInterfaceOrientation << endl;
-	
-	switch (toInterfaceOrientation)
+/*	switch (toInterfaceOrientation)
 	{
 		case UIInterfaceOrientationPortrait:
 		case UIInterfaceOrientationPortraitUpsideDown:
@@ -1044,12 +1025,12 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 		[self.gantt setNeedsDisplay];
 		return;
 		break;
-	}
+	}*/
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-	NSLog(@"GanttViewController:didRotateFromInterfaceOrientation");
+
 }
 
 -(IBAction) StartNewBooking
@@ -1081,6 +1062,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 		return;
 		}
 	
+	AppDelegate->NewBookingButton.title = @"New booking";
 	
 	AppDelegate->newBookingControlller.activityIndicator = self.activityIndicator;
 	AppDelegate->newBookingControlller.pickedDate = self.pickedDate;
@@ -1103,8 +1085,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 		AppDelegate->viewData.Resources[i].includeInNewBookingView = AppDelegate->viewData.Resources[i].Selected;
 	
 	AppDelegate->newBookingControlller.isCreatingNewBooking = isCreatingNewBooking = YES;
-	[self ShowClientsViewController];
-	AppDelegate->NewBookingButton.title = @"New booking";
+	[self presentModalViewController:AppDelegate.newBookingControlller animated:NO];
 }
 
 

@@ -38,11 +38,8 @@ public:
 
 @interface NewBookingController : GanttViewController<UITextViewDelegate, SqlClientDelegate>
 {
-	NSString *ClientName;
 	int CL_KEY;
-	NSString *ProjectName;
 	int PR_KEY;
-	NSString *FolderName;	//@WO_KEY
 	int WO_KEY;				// Folder key (work order)
 	int AC_KEY;
 	int BO_KEY;

@@ -214,12 +214,7 @@
 	
 	DLog(@"NewBookingController: %@ picked", pickedClient);
 
-	ClientName = pickedClient;
-	
 	[ClientButton setTitle:pickedClient forState:UIControlStateNormal];
-	[ClientButton setTitle:pickedClient forState:UIControlStateHighlighted];
-	[ClientButton setTitle:pickedClient forState:UIControlStateDisabled];
-	[ClientButton setTitle:pickedClient forState:UIControlStateSelected];
 
 	
 	// Find client ID
@@ -227,7 +222,7 @@
 	for(int i=0;i<[AppDelegate.clientData Count];i++)
 		{
 		ClientInfo *C = [AppDelegate.clientData GetClientByIndex:i];
-		if([ClientName compare:C->CL_NAME] == NSOrderedSame)
+		if([pickedClient compare:C->CL_NAME] == NSOrderedSame)
 			{
 			CL_KEY = C->CL_KEY;
 			break;
@@ -237,14 +232,8 @@
 		{
 		[AppDelegate.projectData RequestProjectData:CL_KEY];
 		[ProjectButton setTitle:@"Select project" forState:UIControlStateNormal];
-		[ProjectButton setTitle:@"Select project" forState:UIControlStateHighlighted];
-		[ProjectButton setTitle:@"Select project" forState:UIControlStateDisabled];
-		[ProjectButton setTitle:@"Select project" forState:UIControlStateSelected];
 		[AppDelegate.folderData clear];
 		[FolderButton setTitle:@"Select folder" forState:UIControlStateNormal];
-		[FolderButton setTitle:@"Select folder" forState:UIControlStateHighlighted];
-		[FolderButton setTitle:@"Select folder" forState:UIControlStateDisabled];
-		[FolderButton setTitle:@"Select folder" forState:UIControlStateSelected];
 		}
 	else
 		{
@@ -286,15 +275,8 @@
 		}
 
 	[ProjectButton setTitle:projectName forState:UIControlStateNormal];
-	[ProjectButton setTitle:projectName forState:UIControlStateHighlighted];
-	[ProjectButton setTitle:projectName forState:UIControlStateDisabled];
-	[ProjectButton setTitle:projectName forState:UIControlStateSelected];
 	[AppDelegate.folderData clear];
 	[FolderButton setTitle:@"Select folder" forState:UIControlStateNormal];
-	[FolderButton setTitle:@"Select folder" forState:UIControlStateHighlighted];
-	[FolderButton setTitle:@"Select folder" forState:UIControlStateDisabled];
-	[FolderButton setTitle:@"Select folder" forState:UIControlStateSelected];
-
 }
 
 -(void)UserPickedFolder:(NSNotification *)notification
@@ -327,9 +309,6 @@
 		}
 	
 	[FolderButton setTitle:folderName forState:UIControlStateNormal];
-	[FolderButton setTitle:folderName forState:UIControlStateHighlighted];
-	[FolderButton setTitle:folderName forState:UIControlStateDisabled];
-	[FolderButton setTitle:folderName forState:UIControlStateSelected];
 }
 
 -(IBAction) CancelBooking:(id)sender
@@ -340,8 +319,15 @@
 	asd.frame = CGRectMake(0,0,1024, 724);
 	[AppDelegate->ganttviewcontroller.view addSubview:asd];
 	[asd setNeedsDisplay];
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:NO];
 	AppDelegate->ganttviewcontroller.isCreatingNewBooking = NO;
+
+	CL_KEY=0;
+	PR_KEY=0;
+	WO_KEY=0;
+	[ProjectButton setTitle:@"Select Project" forState:UIControlStateNormal];
+	[ClientButton setTitle:@"Select Client" forState:UIControlStateNormal];
+	[FolderButton setTitle:@"Select Folder" forState:UIControlStateNormal];
 }
 
 -(IBAction) ConfirmBooking:(id)sender
@@ -392,7 +378,7 @@
 	asd.frame = CGRectMake(0,0,1024, 724);
 	[AppDelegate->ganttviewcontroller.view addSubview:asd];
 	[asd setNeedsDisplay];
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissModalViewControllerAnimated:NO];
 	AppDelegate->ganttviewcontroller.isCreatingNewBooking = NO;
 }
 
@@ -426,20 +412,6 @@
 
 - (void)CreateBookingInDataBase
 {
-	DLog(@"");
-	/*
-	 EXEC  [dbo].[BOOKING_CREATE]
-	 @CL_KEY = 9130,	// client
-	 @PR_KEY = 311704,	// Project
-	 @WO_KEY = 85291,	// Folder key
-	 @AC_KEY = 78,		// Activity
-	 @FROM_TIME = N'2011-09-26 09:00',
-	 @TO_TIME = N'2011-09-26 19:00',
-	 @SITE_KEY = 9999,
-	 @KeyList = N'101,109'  -- RE_KEYS for booking slots
-	 */
-
-
 	if(BookedResources.size() == 0)
 		return;
 	

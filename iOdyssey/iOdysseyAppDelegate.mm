@@ -513,8 +513,6 @@ iOdysseyAppDelegate* AppDelegate;
 		deviceOrientation = ORIENTATION_PORTRAIT;
 	else if(UIInterfaceOrientationIsLandscape(orientation))
 		deviceOrientation = ORIENTATION_LANDSCAPE;
-
-	cout << "didRotate: " << deviceOrientation << endl;
 }
 
 @end

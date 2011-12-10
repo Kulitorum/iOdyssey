@@ -36,7 +36,6 @@
 @property bool isCreatingNewBooking;
 
 -(IBAction) StartNewBooking;
--(IBAction) ShowClientsViewController;
 -(IBAction) ShowMyBookings:(bool)animated;
 -(IBAction) RequestBookingData;
 -(IBAction) Home:(id)sender;
