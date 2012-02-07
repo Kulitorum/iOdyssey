@@ -114,6 +114,8 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 
     int selected_BO_KEY;
 	UIBarButtonItem *NewBookingButton;
+	
+	bool IOS5;
 }
 
 @property (nonatomic, retain) SqlClient *client;
@@ -155,6 +157,8 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 @property (nonatomic, retain) Scheduler *scheduler;
 
 @property (nonatomic, assign) int lastViewedBookingKey;
+
+@property bool IOS5;
 
 @property bool loginOK;
 @property bool HasCombinationData;
@@ -200,6 +204,8 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 -(IBAction)SetGanttDisplaySmallLarge:(id)sender;
 -(IBAction)GanttNextDay;
 -(IBAction)GanttPreviousDayDay;
+-(IBAction)GanttZoomOut;
+-(IBAction)GanttZoomIn;
 -(void)SetGanttFastDraw:(bool)state;
 
 -(IBAction)showOptionView:(id)sender;

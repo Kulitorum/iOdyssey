@@ -72,7 +72,7 @@
 @synthesize ganttFastDraw;
 @synthesize clientSearchController;
 @synthesize newBookingControlller;
-
+@synthesize IOS5;
 @synthesize timeZone;
 @synthesize calendar;
 
@@ -98,6 +98,19 @@ iOdysseyAppDelegate* AppDelegate;
 {
 	AppDelegate = self;	// setup global pointer to self
 
+	NSComparisonResult order = [[UIDevice currentDevice].systemVersion compare: @"5.0" options: NSNumericSearch];
+	if (order == NSOrderedSame || order == NSOrderedDescending)
+		{
+		IOS5=YES;
+		}
+	else
+		{
+		IOS5=NO;
+		}
+
+    IOS5=NO;
+    
+	NSLog(@"%@", [[UIDevice currentDevice] systemVersion]);
 	
 	// Set the application defaults
 	
@@ -443,6 +456,19 @@ iOdysseyAppDelegate* AppDelegate;
 {
 	displayStart = displayStart.DaysBefore(1);
 	displayEnd = displayEnd.DaysBefore(1);
+	[ganttviewcontroller.gantt setNeedsDisplay];
+}
+-(IBAction)GanttZoomOut
+{
+//	displayStart = displayStart.DaysAfter(1);
+	displayEnd = displayEnd.DaysAfter(1);
+	[ganttviewcontroller.gantt setNeedsDisplay];
+}
+-(IBAction)GanttZoomIn
+{
+//	displayStart = displayStart.DaysBefore(1);
+	if(displayEnd.nstimeInterval() - displayStart.nstimeInterval() > 36*60*60)
+		displayEnd = displayEnd.DaysBefore(1);
 	[ganttviewcontroller.gantt setNeedsDisplay];
 }
 

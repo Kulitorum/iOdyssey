@@ -28,10 +28,20 @@ bool isDoubleTouch;
 @synthesize gantt, activityIndicator, toolBar, pickedDate, buttonWithDateLabel, buttonWithCombinationLabel, GanttToolBar;
 @synthesize isCreatingNewBooking;
 
+
 enum DragMode{DragModeMoveStart, DragModeMoveEnd, DragModeMoveBooking, NotDragging};
 
 DragMode BookingDragMode = NotDragging;	// NO=start, YES=end
 int lastPickedResource;
+
+-(id) initWithCoder:(NSCoder*)coder
+{
+	self = [super initWithCoder:coder];
+	if (self)
+		{
+		}
+	return self;
+}
 
 - (void)changeDate:(UIDatePicker *)sender
 {
@@ -60,6 +70,11 @@ int lastPickedResource;
 	[UIView commitAnimations];
 	[self SetCombinationButtonLabel];
 	[self.gantt RequestResourceData];
+
+	int HOURLINEYSTART=28;
+	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
+	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
+	self.gantt.contentSizeNeedsUpadte = YES;
 }
 
 -(void) SetCombinationButtonLabel
@@ -148,6 +163,8 @@ int lastPickedResource;
 		[GanttToolBar setFrame:CGRectMake(0, self.view.bounds.size.height-44, self.view.bounds.size.width, 44)];
 	else
 		[GanttToolBar setFrame:CGRectMake(0, self.view.bounds.size.height-30, self.view.bounds.size.width, 30)];
+
+	self.gantt.contentSizeNeedsUpadte = YES;
 }
 
 - (void)viewDidLoad
@@ -184,6 +201,7 @@ int lastPickedResource;
 											 selector:@selector(receiveTestNotification:) 
 												 name:@"TestNotification"
 											   object:nil];
+	self.gantt.contentSizeNeedsUpadte = YES;
 }
 
 /* Combination selection popup */
@@ -832,28 +850,28 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 			 }
 			 */		
 			//The image is being panned (moved left or right)
-			float w=AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
+/*			float w=AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
 			AppDelegate.displayStart = AppDelegate.displayStart+diff.x*w/AppDelegate.ganttDisplayWidth;
 			AppDelegate.displayEnd = AppDelegate.displayEnd+diff.x*w/AppDelegate.ganttDisplayWidth;
-			
-			AppDelegate.displayStartY = AppDelegate.displayStartY+diff.y;
-			int ResourceCount = 0;
+*/			
+//			AppDelegate.displayStartY = AppDelegate.displayStartY+diff.y;
+/*			int ResourceCount = 0;
 			for(size_t i=0;i< AppDelegate->viewData.Resources.size() ; i++)
 				if(AppDelegate->viewData.Resources[i].bookings.size() != 0 || AppDelegate->viewData.Resources[i].RE_KEY == -1)
-					ResourceCount++;
-			
+					ResourceCount++;*/
+/*			
 			if(AppDelegate.displayStartY > AppDelegate.ganttResourcesSizeY-AppDelegate.ganttDisplayHeight)
 				AppDelegate.displayStartY = AppDelegate.ganttResourcesSizeY-AppDelegate.ganttDisplayHeight;
 			
 			if(AppDelegate.displayStartY < 0)
 				AppDelegate.displayStartY=0;
-			
+			*/
 			[self.gantt setNeedsDisplay];
 			SingleTouchPoint = touchPoint;
 			}
 		} break;
         case 2: {
-			//The image is being zoomed in or out.
+/*			//The image is being zoomed in or out.
             
             UITouch *touch1 = [[allTouches allObjects] objectAtIndex:0];
             UITouch *touch2 = [[allTouches allObjects] objectAtIndex:1];
@@ -876,7 +894,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 			isDoubleTouch=YES;
             initialDistance = finalDistance;    // continue from here
 			
-            [self.gantt setNeedsDisplay];
+            [self.gantt setNeedsDisplay];*/
         } break;
 	}
 	
@@ -1071,11 +1089,19 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	[asd setNeedsLayout];
 	[asd setNeedsDisplay];
 
-	AppDelegate.displayStartY = 0; // Zoom to top
+//	AppDelegate.displayStartY = 0; // Zoom to top
+	
+	int HOURLINEYSTART=28;
+	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,-HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
+	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
+	
     for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
 		AppDelegate->viewData.Resources[i].includeInNewBookingView = AppDelegate->viewData.Resources[i].Selected;
 	
 	AppDelegate->newBookingControlller.isCreatingNewBooking = isCreatingNewBooking = YES;
+	
+	[gantt.invisibleScrollView setUserInteractionEnabled:NO];
+	
 	[self presentModalViewController:AppDelegate.newBookingControlller animated:NO];
 }
 
@@ -1198,5 +1224,169 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 			}
 		}
 }
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView                                               // any offset changes
+{
+//	NSLog(@".%f",scrollView.contentOffset.x);
+	
+	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
+
+	float positionInPixels = scrollView.contentOffset.x-(1024-RESOURCENAMEWIDTH);
+	
+//	NSLog(@"scrollViewDidScroll : %f", positionInPixels);
+
+	float scrollSizeInPixels = 1024-RESOURCENAMEWIDTH;
+	
+	float thisPos=positionInPixels/scrollSizeInPixels;
+	float numberOfSecondsInView = AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();	// number of seconds in view
+	
+	static float lastPos = 0.0f;
+	float delta = thisPos-lastPos;
+	lastPos = thisPos;
+
+	AppDelegate.displayStartY = scrollView.contentOffset.y;
+//	NSLog(@"%f : %f : %f",scrollView.contentOffset.y, ypos, AppDelegate.displayStartY);
+	[self.gantt setNeedsDisplay];
+
+//	NSLog(@"delta : %f", delta);
+	if(positionInPixels == 0)
+		{
+		lastPos = thisPos;
+		return;	// we stopped, don't update x position
+		}
+	
+	AppDelegate.displayStart = AppDelegate.displayStart+delta*numberOfSecondsInView;
+	AppDelegate.displayEnd = AppDelegate.displayEnd+delta*numberOfSecondsInView;
+}
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_2) // any zoom scale changes
+{
+//	NSLog(@"%f %f %f %f",gantt.bogosViewForZooming.frame.origin.x, gantt.bogosViewForZooming.frame.origin.y, gantt.bogosViewForZooming.frame.size.width, gantt.bogosViewForZooming.frame.size.height);
+
+//	NSLog(@"%f", gantt.bogosViewForZooming.contentScaleFactor);
+	NSLog(@"%f", gantt.invisibleScrollView.zoomScale);
+	
+}
+
+// called on start of dragging (may require some time and or distance to move)
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+	
+}
+// called on finger up if the user dragged. velocity is in points/second. targetContentOffset may be changed to adjust where the scroll view comes to rest. not called when pagingEnabled is YES
+
+// IOS 5 only
+
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
+{
+	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
+
+/*
+ invisibleScrollView.contentSize = CGSizeMake((1024-RESOURCENAMEWIDTH)*3,7700);
+ invisibleScrollView.scrollsToTop = NO;
+ invisibleScrollView.contentOffset = CGPointMake(1024-RESOURCENAMEWIDTH, 0);
+*/
+	
+	AppDelegate.displayStart = AppDelegate.displayStart.HoursAfter(12).StartOfDay();
+	AppDelegate.displayEnd = AppDelegate.displayEnd.HoursAfter(12).StartOfDay();
+	
+	// need more data?
+	double viewStart = AppDelegate.displayStart.nstimeInterval();
+	double viewEnd = AppDelegate.displayEnd.nstimeInterval();
+	
+	float numberOfDaysInView = (viewEnd-viewStart) / (24*60*60);
+
+	NSLog(@"scrollViewWillEndDragging");
+	NSLog(@"	velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
+
+	if(1)// fabs(velocity.x) > fabs(velocity.y))	// primarily x motion
+		{
+		if(velocity.x > 0)
+			{
+			targetContentOffset->x = ((1024-RESOURCENAMEWIDTH)*2);
+			}
+		else
+			{
+			targetContentOffset->x = 0;
+			}
+		}
+	NSLog(@"*********velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
+}
+
+// called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+	NSLog(@"scrollViewDidEndDragging");
+	if(decelerate)
+		{
+		// where will we end?
+		float DateWindow = AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
+		}	
+}
+
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView   // called on finger up as we are moving
+{
+
+	
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView      // called when scroll view grinds to a halt
+{
+	NSLog(@"scrollViewDidEndDecelerating at X:%f", scrollView.contentOffset.x);
+	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
+	[scrollView setContentOffset:CGPointMake(1024-RESOURCENAMEWIDTH,scrollView.contentOffset.y)];	// reset
+	// Snap to 00:00
+	AppDelegate.displayStart = AppDelegate.displayStart.HoursAfter(12).StartOfDay();
+	AppDelegate.displayEnd = AppDelegate.displayEnd.HoursAfter(12).StartOfDay();
+	
+	// need more data?
+	double viewStart = AppDelegate.displayStart.nstimeInterval();
+	double viewEnd = AppDelegate.displayEnd.nstimeInterval();
+	
+	double dataStart = AppDelegate.dataScopeStart.nstimeInterval();
+	double dataEnd = AppDelegate.dataScopeEnd.nstimeInterval();
+	
+//	if(both before view start)
+	// both after view end
+	// datastart > viewstart
+//	dataend < viewend
+		
+	if(dataEnd < viewEnd || dataStart > viewStart)
+		[self RequestBookingData];
+	
+}
+
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView // called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
+{
+}
+
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView     // return a view that will be scaled. if delegate returns nil, nothing happens
+{
+	return gantt.bogosViewForZooming;//nil;
+}
+
+- (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_2) // called before the scroll view begins zooming its content
+{
+	NSLog(@"scrollViewWillBeginZooming");
+}
+
+- (void)scrollViewDidEndZooming:(UIScrollView *)scrollView withView:(UIView *)view atScale:(float)scale // scale between minimum and maximum. called after any 'bounce' animations
+{
+	NSLog(@"scrollViewDidEndZooming");
+}
+
+
+- (BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView   // return a yes if you want to scroll to the top. if not defined, assumes YES
+{
+	return NO;
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView      // called when scrolling animation finished. may be called immediately if already at top
+{
+	
+}
+
 
 @end

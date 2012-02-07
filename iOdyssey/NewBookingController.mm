@@ -203,10 +203,6 @@
 	[self presentModalViewController:AppDelegate.folderData animated:YES];
 }
 
--(IBAction) RequestBookingData
-{
-	
-}
 
 -(void)UserPickedClient:(NSNotification *)notification
 {
@@ -328,6 +324,8 @@
 	[ProjectButton setTitle:@"Select Project" forState:UIControlStateNormal];
 	[ClientButton setTitle:@"Select Client" forState:UIControlStateNormal];
 	[FolderButton setTitle:@"Select Folder" forState:UIControlStateNormal];
+
+	[AppDelegate.ganttviewcontroller.gantt.invisibleScrollView setUserInteractionEnabled:YES];
 }
 
 -(IBAction) ConfirmBooking:(id)sender
@@ -380,6 +378,7 @@
 	[asd setNeedsDisplay];
 	[self dismissModalViewControllerAnimated:NO];
 	AppDelegate->ganttviewcontroller.isCreatingNewBooking = NO;
+	[AppDelegate.ganttviewcontroller.gantt.invisibleScrollView setUserInteractionEnabled:YES];
 }
 
 /* Uncomment to make test booking

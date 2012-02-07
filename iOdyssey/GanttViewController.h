@@ -13,7 +13,7 @@
 #import "MyBookingsController.h"
 #import "PreferencesController.h"
 
-@interface GanttViewController : UIViewController<SqlClientDelegate, UIGestureRecognizerDelegate, UIAlertViewDelegate>
+@interface GanttViewController : UIViewController<SqlClientDelegate, UIGestureRecognizerDelegate, UIAlertViewDelegate, UIScrollViewDelegate>
 {
 	UIActivityIndicatorView *activityIndicator;
 	NSDate *pickedDate;
@@ -35,9 +35,9 @@
 
 @property bool isCreatingNewBooking;
 
+-(IBAction) RequestBookingData;
 -(IBAction) StartNewBooking;
 -(IBAction) ShowMyBookings:(bool)animated;
--(IBAction) RequestBookingData;
 -(IBAction) Home:(id)sender;
 - (IBAction)callDP:(id)sender;
 - (IBAction) dismissDatePicker:(id)sender;

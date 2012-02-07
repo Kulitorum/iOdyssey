@@ -8,13 +8,20 @@
 
 #import <UIKit/UIKit.h>
 #import "SqlClient.h"
+#import "ganttScrollView.h"
 
 @interface GanttView : UIView<SqlClientDelegate>
 {
 	bool DoneUpdating;
 	float RESOURCENAMEWIDTH;
 	bool needsInit;
+	GanttScrollView *invisibleScrollView;
+	bool contentSizeNeedsUpadte;
+	UIView *bogosViewForZooming;
 }
+
+@property (nonatomic, retain) UIScrollView *invisibleScrollView;
+@property (nonatomic, retain) UIView *bogosViewForZooming;
 
 -(IBAction) RequestResourceData;
 -(IBAction) Redraw;
@@ -28,4 +35,5 @@ void drawGradientWithGloss(CGContextRef context, CGRect rect, CGColorRef startCo
 @property bool needsInit;
 @property bool DoneUpdating;
 @property float RESOURCENAMEWIDTH;
+@property bool contentSizeNeedsUpadte;
 @end

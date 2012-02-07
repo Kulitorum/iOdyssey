@@ -61,8 +61,6 @@ public:
 -(IBAction) ConfirmBooking:(id)sender;
 -(IBAction) CancelBooking:(id)sender;
 
--(IBAction) RequestBookingData;
-
 -(void)CreateBookingInDataBase;
 -(void)UserPickedClient:(NSNotification *)notification;
 -(void)UserPickedProject:(NSNotification *)notification;
