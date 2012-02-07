@@ -118,9 +118,9 @@
 					((SCG*)[ServiceGroups objectAtIndex:([ServiceGroups count]-1)])->items = [[NSMutableArray arrayWithCapacity: 2] retain];
 					[((SCG*)[ServiceGroups objectAtIndex:([ServiceGroups count]-1)])->items addObject:C];
 					}
-				else
-					[S release];
+				[S release];
 				[items addObject:C];
+				[C release];
 				}
 			}
 		}

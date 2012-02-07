@@ -201,7 +201,7 @@ NSString *Date::FormatForMyBookings()
 	switch( [components1 month])
 	{
 		case 1:	monthname=@"Janury"; break;
-		case 2:	monthname=@"Febury"; break;
+		case 2:	monthname=@"February"; break;
 		case 3:	monthname=@"Marts"; break;
 		case 4:	monthname=@"April"; break;
 		case 5:	monthname=@"May"; break;
@@ -357,7 +357,7 @@ NSString *Date::MonthValue()
 	switch( [components1 month])
 	{
 		case 1:	monthname=@"Janury"; break;
-		case 2:	monthname=@"Febury"; break;
+		case 2:	monthname=@"February"; break;
 		case 3:	monthname=@"Marts"; break;
 		case 4:	monthname=@"April"; break;
 		case 5:	monthname=@"May"; break;
@@ -383,7 +383,7 @@ NSString* Date::FormatForDataScopeView()
 	switch( [components1 month])
 	{
 		case 1:	monthname=@"Janury"; break;
-		case 2:	monthname=@"Febury"; break;
+		case 2:	monthname=@"February"; break;
 		case 3:	monthname=@"Marts"; break;
 		case 4:	monthname=@"April"; break;
 		case 5:	monthname=@"May"; break;

@@ -47,6 +47,7 @@ void drawGradientWithGloss(CGContextRef context, CGRect rect, CGColorRef startCo
 	CGContextSaveGState(context);
 	drawGradientWithGloss(context, rect, BGColorTop,  BGColorBottom);
 
+	CGColorSpaceRelease(colorspace);
 	[super drawRect:rect];
 }
 @end

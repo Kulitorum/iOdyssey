@@ -71,7 +71,7 @@
 @synthesize ganttDisplaySmallLarge;
 @synthesize ganttFastDraw;
 @synthesize clientSearchController;
-@synthesize newBookingControlller;
+@synthesize theNewBookingControlller;
 @synthesize IOS5;
 @synthesize timeZone;
 @synthesize calendar;
@@ -162,13 +162,13 @@ iOdysseyAppDelegate* AppDelegate;
 	
 	if(IsIpad)
 		{
-		ganttDisplayWidth = 768;
-		ganttDisplayHeight = 1024;
+		ganttDisplayWidth = 1024;
+		ganttDisplayHeight = 768;
 		}
 	else
 		{
-		ganttDisplayWidth = 340;
-		ganttDisplayHeight = 340;
+		ganttDisplayWidth = 480;
+		ganttDisplayHeight = 320;
 		}
 	ganttResourcesSizeY = 100;
 	ganttBookingHeight = 20;//15;
@@ -189,7 +189,7 @@ iOdysseyAppDelegate* AppDelegate;
 	projectData = [[ ProjectData alloc] init];
 	folderData = [[ FolderData alloc] init];
 	
-//	newBookingControlller = [[NewBookingController alloc] init];
+//	theNewBookingControlller = [[NewBookingController alloc] init];
 	
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRotate:) name:@"UIDeviceOrientationDidChangeNotification" object:nil];
@@ -432,7 +432,7 @@ iOdysseyAppDelegate* AppDelegate;
 - (void)dealloc
 {
 	[loginData release];
-	[ColorData release];
+	[colorData release];
     [viewController release];
 	[client release];
     [_window release];

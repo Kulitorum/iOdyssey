@@ -166,8 +166,8 @@
 		}
 	}
 	BoolInputCell *cell;
-	[[cell value] setOn:YES];
-	[[cell Label] setText:@"This is fucked"];
+	[cell.value setOn:YES];
+	[cell.Label setText:@"This is fucked"];
 	return cell;
 }
 

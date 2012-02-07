@@ -29,6 +29,13 @@
 #import "GenericPopupTableViewController.h"
 #import "NavController.h"
 
+
+
+//#define ALLOW_NO_PROJECT_AND_FOLDER
+
+
+
+
 enum SlotNameStyle{BOOKINGNAMESTYLE, CLIENTSTYLE, PROJECTSTYLE, ACTIVITYSTYLE, BOOKINGIDSTYLE, UNKNOWNSTYLE};
 enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOWN};
 
@@ -40,6 +47,7 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 
 // ALog always displays output regardless of the DEBUG setting
 #define ALog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+
 
 
 @interface iOdysseyAppDelegate : NSObject <UIApplicationDelegate> 
@@ -61,7 +69,7 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 	Consumables *consumables;
 	SplashViewController *splashViewController;
 	SignOffViewController *signOffViewController;
-	NewBookingController *newBookingControlller;
+	NewBookingController *theNewBookingControlller;
 	GenericPopupTableViewController *genericPopupTableViewController;
 	
 	SearchableUITableViewController *clientSearchController;
@@ -129,7 +137,7 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 @property (nonatomic, retain) IBOutlet SplashViewController *splashViewController;
 @property (nonatomic, retain) IBOutlet SignOffViewController *signOffViewController;
 @property (nonatomic, retain) IBOutlet SearchableUITableViewController *clientSearchController;
-@property (nonatomic, retain) IBOutlet NewBookingController *newBookingControlller;
+@property (nonatomic, retain) IBOutlet NewBookingController *theNewBookingControlller;
 @property (nonatomic, retain) IBOutlet NavController *MyBookingsAndDrillDown;
 @property (nonatomic, retain) IBOutlet BookingDetailController *bookingDetailController;
 @property (nonatomic, retain) IBOutlet LoginController *loginController;

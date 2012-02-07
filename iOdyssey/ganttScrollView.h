@@ -16,7 +16,7 @@
 */
 @interface GanttScrollView : UIScrollView
 {
-	id <UIScrollViewDelegate> localDelegate;
+	UIResponder *localDelegate;
 	id UIScrollViewPagingSwipeGestureRecognizer;
 }
 

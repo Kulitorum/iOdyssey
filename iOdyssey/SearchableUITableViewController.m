@@ -1,5 +1,5 @@
 //
-//  newBookingControlller.m
+//  theNewBookingControlller.m
 //  TableView
 //
 //  Created by iPhone SDK Articles on 1/17/09.
@@ -52,6 +52,7 @@
 	[table release];
 	
 	self.view = view;
+	[view release];
 	self.searchBar =searchBar;
 
 	searching = NO;

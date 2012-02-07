@@ -492,17 +492,18 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 	
 	if(AppDelegate->ganttviewcontroller.isCreatingNewBooking)
 		{
-		for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
+		for(int b=0;b<[AppDelegate->theNewBookingControlller->BookedResources count];b++)
 			{
-			if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == res.RE_KEY)	// Yay! - I'm getting a new booking
+            ResourceAndTime* resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
+			if(resource.RE_KEY == res.RE_KEY)	// Yay! - I'm getting a new booking
 				{
 				Booking asd;
 				asd.RE_KEY = res.RE_KEY;
 				asd.STATUS = UNKNOWN;
 				asd.pcode = P_OPEN;
 				asd.MTYPE = 1;
-				asd.FROM_TIME = AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME;
-				asd.TO_TIME = AppDelegate->newBookingControlller->BookedResources[b].TO_TIME;
+				asd.FROM_TIME = resource.FROM_TIME;
+				asd.TO_TIME = resource.TO_TIME;
 				asd.CL_NAME = @"NEW BOOKING";
 				asd.Folder_name = @"";
 				asd.Resource = @"";
@@ -731,8 +732,6 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		CGContextClip(context);
 		if(myColor->normalGradient!=0)
 			CGContextDrawLinearGradient(context, myColor->normalGradient, startPoint, endPoint, 0);
-		else
-			int a=0;
 		CGContextRestoreGState(context);
 		
 		if(book.BOKEYSELECTED)
@@ -878,8 +877,11 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		GREY_COLOR = CGColorCreate(colorspace, GREY_COLOR_components);   // define color
 		needsInit=NO;
 
-		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,1024-RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
-//		CGRect scrollViewFrame = CGRectMake(100,100,100,100);
+//		float w = AppDelegate->ganttDisplayWidth;
+		float h = AppDelegate->ganttDisplayHeight;
+		
+//		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,w-RESOURCENAMEWIDTH, h-HOURLINEYSTART-40);
+		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,1024-RESOURCENAMEWIDTH, h-HOURLINEYSTART-40);
 		invisibleScrollView = [[GanttScrollView alloc] initWithFrame:scrollViewFrame];
 		[invisibleScrollView setDelegate:AppDelegate->ganttviewcontroller];
 		invisibleScrollView.userInteractionEnabled = YES;
@@ -960,8 +962,6 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	
 	[self DrawDateGrid:rect withy:HOURLINEYSTART withColorSpace:colorspace WithContext:context];
 	
-	bool JustDrewAHeader=false;
-	
     float y=HOURLINEYSTART-AppDelegate.displayStartY+5;
     float h=AppDelegate.ganttBookingHeight;
 	
@@ -1010,9 +1010,6 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		if((AppDelegate->viewData.Resources[i].bookings.size() != 0 || AppDelegate.SettingsDisplayUnbookedResources ) || AppDelegate->viewData.Resources[i].RE_KEY == -1 )
 			{
 			hasDrawnResource=true;
-			//			Resource *asd = &AppDelegate->viewData.Resources[i];
-			if(AppDelegate->viewData.Resources[i].RE_KEY == -1) // this is a header
-				JustDrewAHeader=true;
 			if(y > 15 && y < AppDelegate.ganttDisplayHeight) // within the current view on the Y axis
 				{
 				DrawBookingResource(rect, AppDelegate->viewData.Resources[i], y+h+4, h, context, colorspace, thisResourceStartY-4);

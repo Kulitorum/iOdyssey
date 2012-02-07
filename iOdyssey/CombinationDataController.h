@@ -8,23 +8,24 @@
 #pragma once
 #import <UIKit/UIKit.h>
 #import "SqlClient.h"
-#include <iostream>
-#include <vector>
 
-using namespace std;
-
-class Combination{
-public:
-    Combination(int key, NSString *name){RV_KEY = key; RV_NAME = [name copy];}
-    
-    int RV_KEY;
+@interface Combination : NSObject
+{
+	int RV_KEY;
     NSString *RV_NAME;
-};
+}
+
+@property int RV_KEY;
+@property (nonatomic, retain) NSString *RV_NAME;
+
+-(id)initWithData:(int)nr name:(NSString*) name;
+
+@end
 
 @interface CombinationDataController : NSObject<SqlClientDelegate, UIPickerViewDelegate, UIPickerViewDataSource>
 {
-    vector<Combination> views;
+	NSMutableArray *views;
 }
-@property vector<Combination> views;
+@property (nonatomic, retain) NSMutableArray *views;
 -(void) RequestCombinationData;
 @end

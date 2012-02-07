@@ -78,12 +78,12 @@
 			NSInteger PR_NAME = [resultSet indexForField:@"PR_NAME"];
 			
 			ProjectInfo C;
-			
+#ifdef ALLOW_NO_PROJECT_AND_FOLDER
 			C.PR_KEY = -1;
 			C.PR_NAME = @"No project selected";
 			projects.push_back(C);
 			
-			
+#endif			
 			while ([resultSet moveNext])
 				{
 				C.PR_KEY = [ resultSet getInteger: PR_KEY ];
@@ -124,7 +124,7 @@
 	topLabel.textColor = [UIColor whiteColor];
 	topLabel.textAlignment = UITextAlignmentCenter;
 	
-	self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 1024, 768-45)];
+	self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, AppDelegate->ganttDisplayWidth, AppDelegate->ganttDisplayHeight-45)];
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 	

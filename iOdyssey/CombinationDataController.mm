@@ -11,7 +11,6 @@
 #import "SqlResultSet.h"
 #import "SqlClientQuery.h"
 #import "CombinationDataController.h"
-#include <iostream>
 #import "iOdysseyAppDelegate.h"
 
 	//#include "iOdysseyAppDelegate.h"
@@ -21,18 +20,44 @@
 
 using namespace std;
 
+@implementation Combination
+
+
+-(id)initWithData:(int)nr name:(NSString*) name
+{
+	self = [super init];
+	if(self)
+		{
+		RV_KEY = nr;
+		RV_NAME = [name retain];
+		}
+	return self;
+}
+
+-(void) dealloc
+{
+	[RV_NAME release];
+}
+
+@synthesize RV_KEY, RV_NAME;
+
+@end
+
+
 @implementation CombinationDataController
 
 @synthesize views;
 
 - (void)dealloc
 {
+	[views release];
+	views=nil;
     [super dealloc];
 }
 
 -(id) init
 {
-	[super init];
+	self = [super init];
 	if(self)
 		{
 		}
@@ -43,7 +68,7 @@ using namespace std;
 
 -(NSString *)pickerView : (UIPickerView *)pickerView titleForRow : (NSInteger)row forComponent : (NSInteger)component
 {
-	return views[row].RV_NAME;
+	return ((Combination*)[views objectAtIndex:row]).RV_NAME;
 } 
 
 -(void)RequestCombinationData
@@ -75,15 +100,23 @@ using namespace std;
 {
     cout << "Got Combination Data, processing" << endl;
     
+	if(views == nil)
+		views = [[NSMutableArray alloc] init];
+	else
+		[views removeAllObjects];
+	
 	if (query.succeeded)
 		{
 		for (SqlResultSet *resultSet in query.resultSets)
 			{
             while ([resultSet moveNext])
 				{
-				NSString *theName = [[resultSet getString:3] retain];
-					//				DLog(@"Combination: %@ ID:%d\n", theName, [resultSet getInteger:0] );
-                views.push_back( Combination([resultSet getInteger:0], [theName retain]) );
+				Combination *tmp = [[Combination alloc] initWithData:[resultSet getInteger:0] name:[resultSet getString:3]];
+				NSLog(@"RT1:%d", [tmp retainCount]);
+				[views addObject:tmp];
+				NSLog(@"RT2:%d", [tmp retainCount]);
+				[tmp release];
+				NSLog(@"RT3:%d", [tmp retainCount]);
                 cout << ".";
 				}
 			}
@@ -107,12 +140,13 @@ using namespace std;
 // returns the # of rows in each component..
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
-    return views.size();
+    return [views count];
 }
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-	cout << "Manager.SelectedCombination:" << views[row].RV_KEY << endl;
-	AppDelegate.SelectedCombination = views[row].RV_KEY;
+	AppDelegate.SelectedCombination = ((Combination*)[views objectAtIndex:row]).RV_KEY;
 }
+
+
 @end

@@ -26,15 +26,21 @@
  @KeyList = N'101,109'  -- RE_KEYS for booking slots
  */
 
-class ResourceAndTime
+@interface ResourceAndTime : NSObject
 {
-public:
 	int RE_KEY;
 	NSString *RE_NAME;
 	Date FROM_TIME;
 	Date TO_TIME;
 };
 
+@property int RE_KEY;
+@property (nonatomic, retain) IBOutlet NSString *RE_NAME;
+@property Date FROM_TIME;
+@property Date TO_TIME;
+
+
+@end
 
 @interface NewBookingController : GanttViewController<UITextViewDelegate, SqlClientDelegate>
 {
@@ -45,13 +51,14 @@ public:
 	int BO_KEY;
 	UITextView *bookingRemarkView;
 @public 
-	vector<ResourceAndTime> BookedResources;
+	NSMutableArray *BookedResources;
 }
 
 @property (nonatomic, retain) IBOutlet UIButton *ClientButton;
 @property (nonatomic, retain) IBOutlet UIButton *ProjectButton;
 @property (nonatomic, retain) IBOutlet UIButton *FolderButton;
 @property (nonatomic, retain) IBOutlet UITextView *FolderRemarksTextView;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *confirmBookingButton;
 @property (nonatomic, retain) UITextView *bookingRemarkView;
 
 -(IBAction) ShowClientPicker:(id)sender;
@@ -60,6 +67,8 @@ public:
 
 -(IBAction) ConfirmBooking:(id)sender;
 -(IBAction) CancelBooking:(id)sender;
+
+-(void) checkIfBookingIsReady;
 
 -(void)CreateBookingInDataBase;
 -(void)UserPickedClient:(NSNotification *)notification;

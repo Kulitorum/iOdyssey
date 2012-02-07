@@ -24,7 +24,7 @@ extern bool BookingSortPredicate(const Booking& d1, const Booking& d2);
 
 -(id)init
 {
-	[super init];
+	self = [super init];
 	if(self)
 		{
 		}
@@ -174,12 +174,13 @@ extern bool BookingSortPredicate(const Booking& d1, const Booking& d2);
 				for(size_t b2=0;b2<newBookings.size();b2++)
 					{
 					bool OneOfTheBookingsIsToday=NO;
-					if(AppDelegate->viewData.Resources[i].bookings[b].FROM_TIME.IsSameDayAs(today) || 
+/*					if(AppDelegate->viewData.Resources[i].bookings[b].FROM_TIME.IsSameDayAs(today) || 
 					   AppDelegate->viewData.Resources[i].bookings[b].TO_TIME.IsSameDayAs(today) || 
 					   newBookings[b2].FROM_TIME.IsSameDayAs(today) || 
 					   newBookings[b2].TO_TIME.IsSameDayAs(today))
 						OneOfTheBookingsIsToday=YES;
 
+*/
 					OneOfTheBookingsIsToday=YES;
 					   
 					if(OneOfTheBookingsIsToday && (AppDelegate->viewData.Resources[i].bookings[b].BO_KEY == newBookings[b2].BO_KEY ))

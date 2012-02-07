@@ -46,6 +46,8 @@
 	
 	AppDelegate.genericPopupTableViewController.view = view;
 	
+	[view release];
+	
     [self becomeFirstResponder];	// Show GenericPopupController
 }
 

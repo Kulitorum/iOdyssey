@@ -17,21 +17,21 @@
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"GanttScrollView:touchesBegan");
-	if(AppDelegate->newBookingControlller.isCreatingNewBooking == NO)
+	if(AppDelegate->theNewBookingControlller.isCreatingNewBooking == NO)
 		[super touchesBegan:touches withEvent:event];
 	[localDelegate touchesBegan:touches withEvent:event];
 }
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"GanttScrollView:touchesBegan");
-	if(AppDelegate->newBookingControlller.isCreatingNewBooking == NO)
+	if(AppDelegate->theNewBookingControlller.isCreatingNewBooking == NO)
 		[super touchesMoved:touches withEvent:event];
 	[localDelegate touchesMoved:touches withEvent:event];
 }
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"GanttScrollView:touchesBegan");
-	if(AppDelegate->newBookingControlller.isCreatingNewBooking == NO)
+	if(AppDelegate->theNewBookingControlller.isCreatingNewBooking == NO)
 		[super touchesEnded:touches withEvent:event];
 	[localDelegate touchesEnded:touches withEvent:event];
 }

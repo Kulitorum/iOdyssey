@@ -166,7 +166,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 	else
 		{
 		//		AppDelegate.lastViewedBookingKey = book->BS_KEY;
-		//[self.navigationController popTonewBookingControlllerAnimated:YES];// Tell detail view ontroller to stand back
+		//[self.navigationController popTotheNewBookingControlllerAnimated:YES];// Tell detail view ontroller to stand back
 		//		[AppDelegate.myBookingsController RefreshView];
 		[self.navigationController popViewControllerAnimated:YES];// Tell detail view ontroller to stand back
 		}
@@ -415,7 +415,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 
 	cell.whereToPutTheNumber = &asd->newQTY;
 	
-	CGRect textFieldFrame = [cell amount].frame;
+	CGRect textFieldFrame = cell.amount.frame;
 	CGRect newTextFieldFrame = CGRectMake(textFieldFrame.origin.x, textFieldFrame.origin.y+6, textFieldFrame.size.width, textFieldFrame.size.height-12);
 	[cell amount].frame = newTextFieldFrame;
 

@@ -134,6 +134,7 @@
 	
 	UIPanGestureRecognizer *leftPan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
     [self addGestureRecognizer:leftPan];
+	[leftPan release];
 	
 	timeInQuartersSinceMidnight = 4*12;
 }

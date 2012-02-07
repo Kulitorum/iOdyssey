@@ -72,6 +72,7 @@ int lastPickedResource;
 	[self.gantt RequestResourceData];
 
 	int HOURLINEYSTART=28;
+//	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,HOURLINEYSTART,AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH, AppDelegate->ganttDisplayHeight-HOURLINEYSTART-40);
 	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
 	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
 	self.gantt.contentSizeNeedsUpadte = YES;
@@ -81,12 +82,18 @@ int lastPickedResource;
 {
 	int selected=AppDelegate.SelectedCombination;
 	// find selected
-	for(size_t i=0; i<AppDelegate.combinationDataController.views.size();i++)
-		if(AppDelegate.combinationDataController.views[i].RV_KEY == selected)
+	
+	NSEnumerator * enumerator = [AppDelegate.combinationDataController.views objectEnumerator];
+	Combination* element;
+	
+	while(element = [enumerator nextObject])
+		{
+		if(element.RV_KEY == selected)
 			{
-			buttonWithCombinationLabel.title = AppDelegate.combinationDataController.views[i].RV_NAME;
+			buttonWithCombinationLabel.title = element.RV_NAME;
 			break;
 			}
+		}
 }
 
 
@@ -186,7 +193,7 @@ int lastPickedResource;
 	 }
 */	
     UILongPressGestureRecognizer *longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handlelongPressGesture:)];
-    longPressRecognizer.minimumPressDuration = 0.5;
+    longPressRecognizer.minimumPressDuration = 1.0;
     longPressRecognizer.numberOfTouchesRequired = 1;
     [self.gantt addGestureRecognizer:longPressRecognizer];
     [longPressRecognizer release];
@@ -243,12 +250,19 @@ int lastPickedResource;
 	
 	int selected=AppDelegate.SelectedCombination;
 	// find selected
-	for(size_t i=0; i<AppDelegate.combinationDataController.views.size();i++)
-		if(AppDelegate.combinationDataController.views[i].RV_KEY == selected)
+
+	NSEnumerator * enumerator = [AppDelegate.combinationDataController.views objectEnumerator];
+	Combination* element;
+
+	while(element = [enumerator nextObject])
+		{
+		if(element.RV_KEY == selected)
 			{
-			[Picker selectRow:i inComponent:0 animated:NO];
+			[Picker selectRow: [AppDelegate.combinationDataController.views indexOfObject:element] inComponent:0 animated:NO];
 			break;
 			}
+		}
+
 }
 
 -(IBAction) Home:(id)sender
@@ -439,34 +453,61 @@ bool BookingSortPredicate(const Booking& d1, const Booking& d2)
 				
 				book.FIRST_NAME = [[resultSet getString:FIRST_NAME] copy];
 				if ( ! [book.FIRST_NAME isKindOfClass:[NSString class]])
+					{
+					[book.FIRST_NAME release];
 					book.FIRST_NAME=@"";
+					}
 				book.ACTIVITY = [[resultSet getString:ACTIVITY] copy];
 				if ( ! [book.ACTIVITY isKindOfClass:[NSString class]])
+					{
+					[book.ACTIVITY release];
 					book.ACTIVITY=@"";
+					}
 				if ([book.FIRST_NAME compare:@"<null>"] == NSOrderedSame)   // person
 					book.FIRST_NAME = @"";
 				book.LAST_NAME = [[resultSet getString:LAST_NAME] copy];
 				if ( ! [book.LAST_NAME isKindOfClass:[NSString class]])
+					{
+					[book.LAST_NAME release];
 					book.LAST_NAME=@"";
+					}
 				if ([book.LAST_NAME compare:@"<null>"] == NSOrderedSame)   // person
+					{
+					[book.LAST_NAME release];
 					book.LAST_NAME = @"";
+					}
 				book.NAME = [[resultSet getString:NAME] copy];
 				if ( ! [book.NAME isKindOfClass:[NSString class]])
+					{
+					[book.NAME release];
 					book.NAME=@"";
+					}
 				book.BK_Remark = [[resultSet getString:BK_Remark] copy];
 				if ( ! [book.BK_Remark isKindOfClass:[NSString class]])
+					{
+					[book.BK_Remark release];
 					book.BK_Remark=@"";
+					}
 				book.Folder_name = [[resultSet getString:Folder_name] copy];
 				if ( ! [book.Folder_name isKindOfClass:[NSString class]])
+					{
+					[book.Folder_name release];
 					book.Folder_name=@"";
+					}
 				book.Folder_remark = [[resultSet getString:Folder_remark] copy];
 				if ( ! [book.Folder_remark isKindOfClass:[NSString class]])
+					{
+					[book.Folder_remark release];
 					book.Folder_remark=@"";
+					}
 				book.TYPE = [[resultSet getString:TYPE] copy];
 				book.BS_KEY = [resultSet getInteger:BS_KEY];
 				book.CL_NAME = [[resultSet getString:CL_NAME] copy];
 				if ( ! [book.CL_NAME isKindOfClass:[NSString class]])
+					{
+					[book.CL_NAME release];
 					book.CL_NAME=@"";
+					}
 				AppDelegate->viewData.AddBooking(book, AppDelegate->loginData.Login.RE_KEY);    // Store booking in gantt chart
 				}
 			}
@@ -547,7 +588,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	[super touchesBegan:touches withEvent:event];
 
     NSSet *allTouches = [event allTouches];
-    
+
     switch ([allTouches count]) {
         case 1: { //Single touch
             
@@ -580,14 +621,14 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 				for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
 					{
 					CGRect resourceBox = AppDelegate->viewData.Resources[i].pickRectangle;
-					if(resourceBox.size.width == resourceBox.size.height == 1)
+					if(resourceBox.size.width == resourceBox.size.height == 1)  // inactive resource
 						continue;
 					//					resourceBox.origin.x = RESOURCENAMEWIDTH;
 					resourceBox.size.width = graphWidth;
 					if (CGRectContainsPoint(resourceBox, touchPoint)) // clicked resource
 						{
 						bool foundBooking = NO;
-						if(touchPoint.x < RESOURCENAMEWIDTH)
+						if(touchPoint.x < RESOURCENAMEWIDTH)    // touched left part, select/deselect resources
 							{
 							AppDelegate->viewData.Resources[i].Selected = !AppDelegate->viewData.Resources[i].Selected;
 							[gantt setNeedsDisplay];
@@ -597,9 +638,10 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 							}
 						else
 							{
-							for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
+							for(int b=0;b<[AppDelegate->theNewBookingControlller->BookedResources count];b++)
 								{
-								if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)	// we are picking a existing new booking
+                                ResourceAndTime* resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
+								if(resource.RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)	// we are picking a existing new booking
 									{
 									if(AppDelegate->viewData.Resources[i].Selected == NO)	// Clicked a non-selected resource
 										{
@@ -610,19 +652,19 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 									
 									lastPickedResource = b;
 									// Start or end?
-									double to=AppDelegate->newBookingControlller->BookedResources[b].TO_TIME.nstimeInterval();
+									double to=resource.TO_TIME.nstimeInterval();
 									double clk = timeClicked.nstimeInterval();
-									double from=AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME.nstimeInterval();
+									double from=resource.FROM_TIME.nstimeInterval();
 									
 									double t1=fabs(from-clk);
 									double t2=fabs(to-clk);
 									
-									float clickPrecision = 60*45;
+									float clickPrecision = 60*45*5;
 									
 									if(clk < from-clickPrecision || clk > to+clickPrecision)
 										BookingDragMode = NotDragging;
 									else
-										if( clk > from+clickPrecision && clk < to-+clickPrecision)
+										if( clk > from && clk < to)
 											BookingDragMode = DragModeMoveBooking;
 										else 
 											if(t1<t2) // closest to start
@@ -633,18 +675,18 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 									if(BookingDragMode == DragModeMoveEnd) // end
 										{
 										if(clk > from)
-											AppDelegate->newBookingControlller->BookedResources[b].TO_TIME = timeClicked;
+											resource.TO_TIME = timeClicked;
 										}
 									else if(BookingDragMode == DragModeMoveStart)
 										{
 										if(clk < to)
-											AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME = timeClicked;
+											resource.FROM_TIME = timeClicked;
 										}
 									else
 										{
 										double span = to-from;
-										AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME = Date(timeClicked-span/2).ClosestQuarter();
-										AppDelegate->newBookingControlller->BookedResources[b].TO_TIME =  Date(timeClicked+span/2).ClosestQuarter();
+										resource.FROM_TIME = Date(timeClicked-span/2).ClosestQuarter();
+										resource.TO_TIME =  Date(timeClicked+span/2).ClosestQuarter();
 										}
 									
 									[gantt setNeedsDisplay];
@@ -654,16 +696,17 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 								}
 							if(foundBooking == NO)
 								{
-								DLog(@"ADD NEW BOOKING TO AppDelegate->newBookingControlller->BookedResources");
+								DLog(@"ADD NEW BOOKING TO AppDelegate->theNewBookingControlller->BookedResources");
 								for(size_t j=0;j<AppDelegate->viewData.Resources.size();j++)
 									if(AppDelegate->viewData.Resources[j].Selected == YES)	// Clicked a non-selected resource
 										{
-										ResourceAndTime C;
+										ResourceAndTime *C = [[ResourceAndTime alloc] init];
 										C.RE_KEY = AppDelegate->viewData.Resources[j].RE_KEY;
 										C.RE_NAME = AppDelegate->viewData.Resources[j].RE_NAME;
 										C.FROM_TIME = timeClicked;
 										C.TO_TIME = timeClicked.After(0,0,15);	// least 15 minute booking
-										AppDelegate->newBookingControlller->BookedResources.push_back(C);
+                                        [AppDelegate->theNewBookingControlller->BookedResources addObject:C];
+                                        [C release];
 										BookingDragMode=DragModeMoveEnd;
 										}
 								[gantt setNeedsDisplay];
@@ -727,7 +770,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 		{
 		if(isCreatingNewBooking)
 			{
-			if(AppDelegate->newBookingControlller->BookedResources.size() == 0)	// Dragging outside a booking, and there is no bookings
+			if([AppDelegate->theNewBookingControlller->BookedResources count] == 0)	// Dragging outside a booking, and there is no bookings
 				return;
 			float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
 			// "when" did we click?
@@ -746,42 +789,53 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 			// Align to 1/4 hours
 			timeClicked = timeClicked.ClosestQuarter();
 
-			double to=AppDelegate->newBookingControlller->BookedResources[lastPickedResource].TO_TIME.nstimeInterval();
+            ResourceAndTime *resource = [AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:lastPickedResource];
+                
+			double to=resource.TO_TIME.nstimeInterval();
 			double clk = timeClicked.nstimeInterval();
-			double from=AppDelegate->newBookingControlller->BookedResources[lastPickedResource].FROM_TIME.nstimeInterval();
+			double from=((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:lastPickedResource]).FROM_TIME.nstimeInterval();
 			
 			if(BookingDragMode == DragModeMoveEnd) // end
 				{
 				if(clk > from)
 					{
-					for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
-						for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-							if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
+					for(int b=0;b<[AppDelegate->theNewBookingControlller->BookedResources count];b++)
+                        {
+                        ResourceAndTime *resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
+                        for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
+							if(resource.RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
 								if(AppDelegate->viewData.Resources[i].Selected)
-									AppDelegate->newBookingControlller->BookedResources[b].TO_TIME = timeClicked;
+									resource.TO_TIME = timeClicked;
+                        }
 					}
 				}
 			else if(BookingDragMode == DragModeMoveStart)
 				{
 				if(clk < to)
-					for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
+					for(int b=0;b<[AppDelegate->theNewBookingControlller->BookedResources count];b++)
+                    {
+                        ResourceAndTime *resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
 						for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-							if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
+							if(resource.RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
 								if(AppDelegate->viewData.Resources[i].Selected)
-									AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME = timeClicked;
+									resource.FROM_TIME = timeClicked;
+                    }
 				}
 			else if(BookingDragMode == DragModeMoveBooking)
 				{
 				double span = to-from;
-				for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
-					for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-						if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
+					for(int b=0;b<[AppDelegate->theNewBookingControlller->BookedResources count];b++)
+                    {
+                    ResourceAndTime *resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
+                    for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
+						if(resource.RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)
 							if(AppDelegate->viewData.Resources[i].Selected)
 								{
-								AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME = Date(timeClicked-span/2).ClosestQuarter();
-								AppDelegate->newBookingControlller->BookedResources[b].TO_TIME =  Date(timeClicked+span/2).ClosestQuarter();
+								resource.FROM_TIME = Date(timeClicked-span/2).ClosestQuarter();
+								resource.TO_TIME =  Date(timeClicked+span/2).ClosestQuarter();
 								}
-				}
+                    }
+                }
 
 			[gantt setNeedsDisplay];
 
@@ -794,18 +848,18 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 				if (CGRectContainsPoint(resourceBox, touchPoint))	// clicked the "BAR"
 					{
 					bool foundBooking = NO;
-					for(int b=0;b<AppDelegate->newBookingControlller->BookedResources.size();b++)
+					for(int b=0;b<AppDelegate->theNewBookingControlller->BookedResources.size();b++)
 						{
-						if(AppDelegate->newBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)	// we are picking a existing new booking
+						if(AppDelegate->theNewBookingControlller->BookedResources[b].RE_KEY == AppDelegate->viewData.Resources[i].RE_KEY)	// we are picking a existing new booking
 							{
 							if(BookingDragMode) // end
 								{
-								if(timeClicked.nstimeInterval() > AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME.nstimeInterval())
-									AppDelegate->newBookingControlller->BookedResources[b].TO_TIME = timeClicked;
+								if(timeClicked.nstimeInterval() > AppDelegate->theNewBookingControlller->BookedResources[b].FROM_TIME.nstimeInterval())
+									AppDelegate->theNewBookingControlller->BookedResources[b].TO_TIME = timeClicked;
 								}
 							else // dragging start
-								if(timeClicked.nstimeInterval() < AppDelegate->newBookingControlller->BookedResources[b].TO_TIME.nstimeInterval())
-									AppDelegate->newBookingControlller->BookedResources[b].FROM_TIME = timeClicked;
+								if(timeClicked.nstimeInterval() < AppDelegate->theNewBookingControlller->BookedResources[b].TO_TIME.nstimeInterval())
+									AppDelegate->theNewBookingControlller->BookedResources[b].FROM_TIME = timeClicked;
 							
 							[gantt setNeedsDisplay];
 							foundBooking=YES;
@@ -813,13 +867,13 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 						}
 					if(foundBooking == NO)
 						{
-						DLog(@"ADD NEW BOOKING TO AppDelegate->newBookingControlller->BookedResources");
+						DLog(@"ADD NEW BOOKING TO AppDelegate->theNewBookingControlller->BookedResources");
 						ResourceAndTime C;
 						C.RE_KEY = AppDelegate->viewData.Resources[i].RE_KEY;
 						C.RE_NAME = AppDelegate->viewData.Resources[i].RE_NAME;
 						C.FROM_TIME = timeClicked;
 						C.TO_TIME = timeClicked.HoursAfter(1);
-						AppDelegate->newBookingControlller->BookedResources.push_back(C);
+						AppDelegate->theNewBookingControlller->BookedResources.push_back(C);
 						[gantt setNeedsDisplay];
 						}
 					}
@@ -1044,9 +1098,23 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 -(IBAction) StartNewBooking
 {
+	
+	[AppDelegate->theNewBookingControlller.confirmBookingButton setEnabled:NO];
+
+	[AppDelegate->theNewBookingControlller.ClientButton setTitle:@"Select Client" forState:UIControlStateNormal];
+	[AppDelegate->theNewBookingControlller.ProjectButton setTitle:@"Select Project" forState:UIControlStateNormal];
+	[AppDelegate->theNewBookingControlller.FolderButton setTitle:@"Select Folder" forState:UIControlStateNormal];
+	
+	[AppDelegate->theNewBookingControlller.ProjectButton setEnabled:NO];
+	[AppDelegate->theNewBookingControlller.FolderButton setEnabled:NO];
 
 	// Check if we have any resources selected
-	
+
+    if(	AppDelegate->theNewBookingControlller->BookedResources == nil)
+        AppDelegate->theNewBookingControlller->BookedResources = [[NSMutableArray alloc] init];
+    [AppDelegate->theNewBookingControlller->BookedResources removeAllObjects];
+
+    
 	bool HasBookingsSelected=NO;
 	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
 		if(AppDelegate->viewData.Resources[i].Selected)
@@ -1073,36 +1141,40 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	
 	AppDelegate->NewBookingButton.title = @"New booking";
 	
-	AppDelegate->newBookingControlller.activityIndicator = self.activityIndicator;
-	AppDelegate->newBookingControlller.pickedDate = self.pickedDate;
-	AppDelegate->newBookingControlller.buttonWithDateLabel = self.buttonWithDateLabel;
-	AppDelegate->newBookingControlller.buttonWithCombinationLabel = self.buttonWithCombinationLabel;
-	AppDelegate->newBookingControlller.GanttToolBar = self.GanttToolBar;
-	AppDelegate->newBookingControlller.isCreatingNewBooking = self.isCreatingNewBooking;
-	AppDelegate->newBookingControlller.gantt = self.gantt;
+	AppDelegate->theNewBookingControlller.activityIndicator = self.activityIndicator;
+	AppDelegate->theNewBookingControlller.pickedDate = self.pickedDate;
+	AppDelegate->theNewBookingControlller.buttonWithDateLabel = self.buttonWithDateLabel;
+	AppDelegate->theNewBookingControlller.buttonWithCombinationLabel = self.buttonWithCombinationLabel;
+	AppDelegate->theNewBookingControlller.GanttToolBar = self.GanttToolBar;
+	AppDelegate->theNewBookingControlller.isCreatingNewBooking = self.isCreatingNewBooking;
+	AppDelegate->theNewBookingControlller.gantt = self.gantt;
 	
 	GanttView *asd = self.gantt;
 	[asd removeFromSuperview];
 	asd.frame = CGRectMake(10,248,994,466);
-	[AppDelegate->newBookingControlller.view addSubview:asd];
-	[AppDelegate->newBookingControlller.view setNeedsLayout];
+	[AppDelegate->theNewBookingControlller.view addSubview:asd];
+	[AppDelegate->theNewBookingControlller.view setNeedsLayout];
 	[asd setNeedsLayout];
 	[asd setNeedsDisplay];
 
 //	AppDelegate.displayStartY = 0; // Zoom to top
 	
 	int HOURLINEYSTART=28;
+	
+	
+	
 	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,-HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
+//	CGRect scrollViewFrame = CGRectMake(AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH,-HOURLINEYSTART,AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH, AppDelegate->ganttDisplayHeight-HOURLINEYSTART-40);
 	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
 	
     for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
 		AppDelegate->viewData.Resources[i].includeInNewBookingView = AppDelegate->viewData.Resources[i].Selected;
 	
-	AppDelegate->newBookingControlller.isCreatingNewBooking = isCreatingNewBooking = YES;
+	AppDelegate->theNewBookingControlller.isCreatingNewBooking = isCreatingNewBooking = YES;
 	
 	[gantt.invisibleScrollView setUserInteractionEnabled:NO];
 	
-	[self presentModalViewController:AppDelegate.newBookingControlller animated:NO];
+	[self presentModalViewController:AppDelegate.theNewBookingControlller animated:NO];
 }
 
 
@@ -1215,7 +1287,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 		
 		if (buttonIndex == 0)
 			{
-			AppDelegate->newBookingControlller->BookedResources.erase(AppDelegate->newBookingControlller->BookedResources.begin()+lastPickedResource);
+            [AppDelegate->theNewBookingControlller->BookedResources removeObjectAtIndex:lastPickedResource];
 			[gantt setNeedsDisplay];
 			}
 		else if (buttonIndex == 1)
@@ -1290,10 +1362,9 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	AppDelegate.displayEnd = AppDelegate.displayEnd.HoursAfter(12).StartOfDay();
 	
 	// need more data?
-	double viewStart = AppDelegate.displayStart.nstimeInterval();
-	double viewEnd = AppDelegate.displayEnd.nstimeInterval();
-	
-	float numberOfDaysInView = (viewEnd-viewStart) / (24*60*60);
+//	double viewStart = AppDelegate.displayStart.nstimeInterval();
+//	double viewEnd = AppDelegate.displayEnd.nstimeInterval();
+//	float numberOfDaysInView = (viewEnd-viewStart) / (24*60*60);
 
 	NSLog(@"scrollViewWillEndDragging");
 	NSLog(@"	velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
@@ -1319,7 +1390,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	if(decelerate)
 		{
 		// where will we end?
-		float DateWindow = AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
+//		float DateWindow = AppDelegate.displayEnd.nstimeInterval() - AppDelegate.displayStart.nstimeInterval();
 		}	
 }
 

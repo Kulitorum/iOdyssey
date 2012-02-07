@@ -94,11 +94,12 @@
 			NSInteger NAME = [resultSet indexForField:@"NAME"];
 			
 			FolderInfo C;
-			
+#ifdef ALLOW_NO_PROJECT_AND_FOLDER
+
 			C.WO_KEY = -100;
 			C.NAME = @"No folder selected";
 			folders.push_back(C);
-
+#endif
 			while ([resultSet moveNext])
 				{
 				C.WO_KEY = [ resultSet getInteger: WO_KEY ];
@@ -134,7 +135,7 @@
 	topLabel.textColor = [UIColor whiteColor];
 	topLabel.textAlignment = UITextAlignmentCenter;
 	
-	self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, 1024, 768-45)];
+	self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 45, AppDelegate->ganttDisplayWidth, AppDelegate->ganttDisplayHeight-45)];
 	self.tableView.dataSource = self;
 	self.tableView.delegate = self;
 	

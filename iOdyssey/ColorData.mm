@@ -309,6 +309,7 @@ void ColorInfo::buildGradients()
 		[alert show];
 		[alert release];   
 		}
+	CGColorSpaceRelease(colorspace);
 	[AppDelegate RequestNextDataType];
 }
 

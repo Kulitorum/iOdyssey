@@ -23,6 +23,27 @@
   @SITE_KEY = 9999,
   @KeyList = N'101,109'  -- RE_KEYS for booking slots
  */
+@implementation ResourceAndTime
+
+@synthesize RE_KEY;
+@synthesize RE_NAME;
+@synthesize FROM_TIME;
+@synthesize TO_TIME;
+
+
+-(id)init
+{
+    self = [super init];
+    if(self)
+    {
+        
+    }
+    return self;
+}
+
+@end
+
+
 
 @implementation NewBookingController
 @synthesize ClientButton;
@@ -30,6 +51,7 @@
 @synthesize FolderButton;
 @synthesize FolderRemarksTextView;
 @synthesize bookingRemarkView;
+@synthesize confirmBookingButton;
 
 -(BOOL)textFieldShouldReturn:(UITextField *)theTextField
 {
@@ -120,7 +142,8 @@
 #pragma mark -
 #pragma mark Responding to keyboard events
 
-- (void)keyboardWillShow:(NSNotification *)notification {
+- (void)keyboardWillShow:(NSNotification *)notification
+{
 /*    
     
     // Reduce the size of the text view so that it's not obscured by the keyboard.
@@ -181,6 +204,7 @@
 }
 -(IBAction) ShowProjectPicker:(id)sender
 {
+#ifdef ALLOW_NO_PROJECT_AND_FOLDER
 	if(AppDelegate->projectData->projects.size() == 0)
 		{
 		ProjectInfo C;
@@ -188,10 +212,12 @@
 		C.PR_NAME = @"No Project selected";
 		AppDelegate->projectData->projects.push_back(C);
 		}
+#endif
 	[self presentModalViewController:AppDelegate.projectData animated:YES];
 }
 -(IBAction) ShowFolderPicker:(id)sender
 {
+#ifdef ALLOW_NO_PROJECT_AND_FOLDER
 	if(AppDelegate->folderData->folders.size() == 0)
 		{
 		FolderInfo C;
@@ -199,7 +225,7 @@
 		C.NAME = @"No Folder selected";
 		AppDelegate->folderData->folders.push_back(C);
 		}
-	
+#endif
 	[self presentModalViewController:AppDelegate.folderData animated:YES];
 }
 
@@ -227,9 +253,8 @@
 	if(CL_KEY != 0)
 		{
 		[AppDelegate.projectData RequestProjectData:CL_KEY];
-		[ProjectButton setTitle:@"Select project" forState:UIControlStateNormal];
 		[AppDelegate.folderData clear];
-		[FolderButton setTitle:@"Select folder" forState:UIControlStateNormal];
+		[AppDelegate->theNewBookingControlller.ProjectButton setEnabled:YES];
 		}
 	else
 		{
@@ -237,6 +262,7 @@
 		[alert show];
 		[alert release];   
 		}
+	[self checkIfBookingIsReady];
 }
 
 -(void)UserPickedProject:(NSNotification *)notification
@@ -262,6 +288,7 @@
 	if([projectName compare:@""] != NSOrderedSame)
 		{
 		[AppDelegate.folderData RequestFolderData:PR_KEY];
+		[AppDelegate->theNewBookingControlller.FolderButton setEnabled:YES];
 		}
 	else
 		{
@@ -273,6 +300,8 @@
 	[ProjectButton setTitle:projectName forState:UIControlStateNormal];
 	[AppDelegate.folderData clear];
 	[FolderButton setTitle:@"Select folder" forState:UIControlStateNormal];
+
+	[self checkIfBookingIsReady];
 }
 
 -(void)UserPickedFolder:(NSNotification *)notification
@@ -305,11 +334,14 @@
 		}
 	
 	[FolderButton setTitle:folderName forState:UIControlStateNormal];
+
+
+	[self checkIfBookingIsReady];
 }
 
 -(IBAction) CancelBooking:(id)sender
 {
-	BookedResources.clear();
+	[BookedResources removeAllObjects];
 	GanttView *asd = self.gantt;
 	[asd removeFromSuperview];
 	asd.frame = CGRectMake(0,0,1024, 724);
@@ -326,6 +358,14 @@
 	[FolderButton setTitle:@"Select Folder" forState:UIControlStateNormal];
 
 	[AppDelegate.ganttviewcontroller.gantt.invisibleScrollView setUserInteractionEnabled:YES];
+}
+
+
+
+-(void) checkIfBookingIsReady
+{
+	if(CL_KEY != 0 && PR_KEY != 0 && WO_KEY != 0)
+		[confirmBookingButton setEnabled:YES];
 }
 
 -(IBAction) ConfirmBooking:(id)sender
@@ -411,17 +451,17 @@
 
 - (void)CreateBookingInDataBase
 {
-	if(BookedResources.size() == 0)
+	if([BookedResources count] == 0)
 		return;
 	
-	Date FROM_TIME = BookedResources[0].FROM_TIME;
-	Date TO_TIME = BookedResources[0].TO_TIME;
-	for(int i=0;i<BookedResources.size();i++)
+	Date FROM_TIME = ((ResourceAndTime*)[BookedResources objectAtIndex:0]).FROM_TIME;
+	Date TO_TIME = ((ResourceAndTime*)[BookedResources objectAtIndex:0]).TO_TIME;
+	for(int i=0;i<[BookedResources count];i++)
 		{
-		if(BookedResources[i].FROM_TIME.nstimeInterval() < FROM_TIME.nstimeInterval())
-			FROM_TIME = BookedResources[i].FROM_TIME;
-		if(BookedResources[i].TO_TIME.nstimeInterval() > TO_TIME.nstimeInterval())
-			TO_TIME = BookedResources[i].TO_TIME;
+		if(((ResourceAndTime*)[BookedResources objectAtIndex:i]).FROM_TIME.nstimeInterval() < FROM_TIME.nstimeInterval())
+			FROM_TIME = ((ResourceAndTime*)[BookedResources objectAtIndex:i]).FROM_TIME;
+		if(((ResourceAndTime*)[BookedResources objectAtIndex:i]).TO_TIME.nstimeInterval() > TO_TIME.nstimeInterval())
+			TO_TIME = ((ResourceAndTime*)[BookedResources objectAtIndex:i]).TO_TIME;
 		}
 
 	BO_KEY=0;	// booking not created yet
@@ -457,12 +497,12 @@
 					[text release];
 					
 					// Add booking slots
-					for(int i=0;i<BookedResources.size();i++)
+					for(int i=0;i<[BookedResources count];i++)
 						{
-						NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_BOOKING_SLOT_CREATE @BO_KEY=%d, @RE_KEY=%d, @FROM_TIME='%@', @TO_TIME='%@', @SITE_KEY=%d", BO_KEY, BookedResources[i].RE_KEY,
-										 BookedResources[i].FROM_TIME.FormatForSQLWithTime(),
-										 BookedResources[i].TO_TIME.FormatForSQLWithTime(),AppDelegate->loginData.Login.SITE_KEY];
-						DLog("Adding booking slot : %@ for resource %d (%d)", request, BookedResources[i].RE_KEY, i);
+						NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_BOOKING_SLOT_CREATE @BO_KEY=%d, @RE_KEY=%d, @FROM_TIME='%@', @TO_TIME='%@', @SITE_KEY=%d", BO_KEY, ((ResourceAndTime*)[BookedResources objectAtIndex:i]).RE_KEY,
+										 ((ResourceAndTime*)[BookedResources objectAtIndex:i]).FROM_TIME.FormatForSQLWithTime(),
+										 ((ResourceAndTime*)[BookedResources objectAtIndex:i]).TO_TIME.FormatForSQLWithTime(),AppDelegate->loginData.Login.SITE_KEY];
+						DLog("Adding booking slot : %@ for resource %d (%d)", request, ((ResourceAndTime*)[BookedResources objectAtIndex:i]).RE_KEY, i);
 						[AppDelegate.client executeQuery:request withDelegate:self];
 						}
 					}
@@ -542,13 +582,14 @@
 			
 			NSInteger WO_KEY = [resultSet indexForField:@"WO_KEY"];
 			NSInteger NAME = [resultSet indexForField:@"NAME"];
-			
+ #ifdef ALLOW_NO_PROJECT_AND_FOLDER
+
 			FolderInfo C;
 			
 			C.WO_KEY = -100;
 			C.NAME = @"No folder selected";
 			folders.push_back(C);
-			
+#endif			
 			while ([resultSet moveNext])
 				{
 				C.WO_KEY = [ resultSet getInteger: WO_KEY ];
