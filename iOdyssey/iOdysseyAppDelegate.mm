@@ -64,7 +64,6 @@
 @synthesize selected_BO_KEY;
 @synthesize splashView;
 @synthesize splashViewController;
-@synthesize viewDataController;
 @synthesize dataScopeStart, dataScopeEnd;
 @synthesize ganttDisplaySelectedOnly;
 @synthesize ganttDisplaySmallLarge;
@@ -108,6 +107,8 @@ iOdysseyAppDelegate* AppDelegate;
 	
 	[defaults registerDefaults:appDefaults];
 	[defaults synchronize];
+	
+	viewData = [[ViewData alloc] init];
 	
 	timeZone = [[NSTimeZone timeZoneForSecondsFromGMT:0] retain];//  [NSTimeZone systemTimeZone];
 	calendar = [[NSCalendar currentCalendar] retain];
@@ -204,7 +205,6 @@ iOdysseyAppDelegate* AppDelegate;
 	[self.window addSubview:ganttviewcontroller.view]; // gantt and mybookings
 	[self.window addSubview:splashView];		  // splash
 	[self.window makeKeyAndVisible];
-	viewDataController = [[ViewDataController alloc] init];
 	scheduler = [[Scheduler alloc] init];
 	[self RequestNextDataType];
 	    return YES;
@@ -236,7 +236,6 @@ iOdysseyAppDelegate* AppDelegate;
 		case 7:
 			clientSearchController = [[SearchableUITableViewController alloc] init];
 			[clientSearchController initData];
-			[viewDataController start];
 
 		for (UIView *subview in [self.window subviews])
 				{
@@ -467,8 +466,8 @@ iOdysseyAppDelegate* AppDelegate;
 	ganttDisplaySelectedOnly = (bool)selected;
 
 	bool AnyResourcesSelected=NO;
-    for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
-		if(AppDelegate->viewData.Resources[i].Selected == YES)
+	for(Resource* res in AppDelegate->viewData.Resources)
+		if(res.Selected == YES)
 			{
 			AnyResourcesSelected=YES;
 			break;
@@ -476,10 +475,10 @@ iOdysseyAppDelegate* AppDelegate;
 	
 	if(AnyResourcesSelected == NO)
 		{
-		for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
-			if(AppDelegate->viewData.Resources[i].RE_KEY == AppDelegate.loginData.Login.RE_KEY)
+		for(Resource* res in AppDelegate->viewData.Resources)
+			if(res.RE_KEY == AppDelegate.loginData.Login.RE_KEY)
 				{
-				AppDelegate->viewData.Resources[i].Selected = YES;
+				res.Selected = YES;
 				break;
 				}
 		}

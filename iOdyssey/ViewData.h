@@ -22,78 +22,57 @@ using namespace std;
 33 | 102 | 2 | <null> | 0 | Flame  | 1999-03-01 00:00:00 +0000 | 2015-12-31 00:00:00 +0000 | 0 | 9999 | 1 | 
 33 | 104 | 3 | <null> | 0 | Nuke 2 | 2009-09-01 00:00:00 +0000 | 2015-12-31 00:00:00 +0000 | 0 | 9999 | 1 | 
 */
-class Resource{
-public:
-	Resource(){};
-    Resource(NSString *ResourceName, int KEY)
-    {
-	RE_NAME = [ResourceName copy];
-	RE_KEY=KEY;
-	Unfolded = NO;
-	Selected = NO;
-	includeInNewBookingView=NO;
-    }
+
+/*********************************************************
+ 
+ Resource
+ 
+ *********************************************************/
+
+@interface Resource : NSObject
+{
     NSString *RE_NAME;
     int RE_KEY;
-
-    void DeleteBookings()  { bookings.clear(); }
 	CGRect pickRectangle;
 	CGRect selectRectangle;
 	bool Unfolded;
 	bool Selected;
 	bool includeInNewBookingView;
-    vector<Booking> bookings;
+    NSMutableArray *bookings;
 };
 
-class ViewData
+@property (nonatomic, retain) NSString *RE_NAME;
+@property int RE_KEY;
+@property CGRect pickRectangle;
+@property CGRect selectRectangle;
+@property bool Unfolded;
+@property bool Selected;
+@property bool includeInNewBookingView;
+@property (nonatomic, retain) NSMutableArray *bookings;
+
+-(void) deleteBookings;
+-(id)initWithName:(NSString*)name ID:(int)ID;
+-(void) sortBookingsByStartDate;
+
+@end
+
+/*********************************************************
+ 
+ ViewData
+ 
+ *********************************************************/
+
+@interface ViewData : NSObject
 {
-public:  
-    ViewData(){};
-    void Clear(){
-        for(size_t i=0;i<Resources.size();i++)
-            Resources[i].DeleteBookings();
-    }
-	
-    void AddResource(Resource &res)
-	{
-	for(size_t i=0;i<Resources.size();i++)
-        {
-		if(res.RE_KEY == Resources[i].RE_KEY)
-			return;	// And thereby not to add it
-		}
-	Resources.push_back(res);
-	}
-	
-	
-    void AddBooking(Booking &book, int LOGGEDIN_RESOURCE_ID)
-    {
-        for(size_t i=0;i<Resources.size();i++)
-        {
-            if(book.RE_KEY == Resources[i].RE_KEY)
-            {
-			bool hasBooking=NO;
-			for(int x=0;x<Resources[i].bookings.size();x++)
-				if(Resources[i].bookings[x].BS_KEY == book.BS_KEY)
-					hasBooking = YES;
-			if(hasBooking == NO)
-				Resources[i].bookings.push_back(book);
-            return;
-            }
-        }
-		cout << "AddBooking : Resource not found : " << [book.Resource UTF8String] << endl;
-    }
-    vector<Resource> Resources;
+	NSMutableArray *Resources;
 };
 
+@property (nonatomic, retain) NSMutableArray *Resources;
 
-@interface ViewDataController : NSObject <SqlClientDelegate>
-{
-	NSTimer *timer;
-}
-
--(void) RefreshMyBookings;
--(void) start;
-
+-(void) AddResource:(Resource*) other;
+-(void) AddBooking:(Booking*) book LOGGEDIN_RESOURCE_ID:(int)LOGGEDIN_RESOURCE_ID;
+-(void) clearBookings;
+-(void) Clear;
 @end
 
 

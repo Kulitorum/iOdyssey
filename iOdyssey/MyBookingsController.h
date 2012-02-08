@@ -44,7 +44,6 @@ using namespace std;
 
 -(IBAction) ShowAbout;
 -(IBAction) ShowPreferences;
--(IBAction) UpdateData;
 -(void) RecalcBookingsPrDayTable;
 
 @end

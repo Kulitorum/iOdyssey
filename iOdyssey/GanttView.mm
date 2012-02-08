@@ -42,12 +42,12 @@ CGColorRef BLUE_TEXT_COLOR;
 
 UIImage *selectedResourceImage=nil;
 
-void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, CGRect *drawRectangle);
+void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace);
 
 
 - (void)sqlQueryDidFinishExecuting:(SqlClientQuery *)query
 {
-	AppDelegate->viewData.Resources.clear();
+	[AppDelegate->viewData clearBookings];
 	
     cout << "Got Resource data, processing" << endl;
 	if (query.succeeded)
@@ -61,11 +61,12 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 				if( [resultSet getInteger:[resultSet indexForField:@"RE_KEY"]] == -1) // Header
 					{
 					string name("");
-					Resource ting(@"",-1);
+					Resource* ting = [[Resource alloc] initWithName:@"" ID:-1];
 					NSString *sName = [ resultSet getString: [resultSet indexForField:@"HEADER_TXT"] ];
 					if ([sName isKindOfClass:[NSString class]])
 						ting.RE_NAME=[sName copy];
-					AppDelegate->viewData.AddResource(ting);
+					[AppDelegate->viewData AddResource:ting];
+					[ting release];
 					}
 				else
 					{
@@ -86,25 +87,23 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 						{
 						name = [resultSet getString:[resultSet indexForField:@"RE_NAME"]];
 						}
-					Resource ting( name, [resultSet getInteger:[resultSet indexForField:@"RE_KEY"]]);
-					
+					Resource* ting = [[Resource alloc] initWithName:name ID:[resultSet getInteger:[resultSet indexForField:@"RE_KEY"]]];
+
 					if(ting.RE_KEY == AppDelegate->loginData.Login.RE_KEY)
 						{
 						bool hasMe=NO;
-						for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-							{
-							if(AppDelegate->viewData.Resources[i].RE_KEY == ting.RE_KEY)
+						for(Resource *res in AppDelegate->viewData.Resources)
+							if(res.RE_KEY == ting.RE_KEY)
 								{
 								hasMe = YES;
 								break;
 								}
-							}
 						if(hasMe == NO) // Add me
-							AppDelegate->viewData.AddResource(ting);
+							[AppDelegate->viewData AddResource:ting];
 						}	// if me
 					else
 						{
-						AppDelegate->viewData.AddResource(ting);
+						[AppDelegate->viewData AddResource:ting];
 						}
 					}
 				}
@@ -432,7 +431,7 @@ void drawGradientInRect(CGRect rect, CGColorSpaceRef colorSpace, CGContextRef co
 		}
 }
 
-void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, float yStart)
+void DrawBookingResource(CGRect rect, Resource *res, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, float yStart)
 {
 	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt->RESOURCENAMEWIDTH;
 	
@@ -494,7 +493,7 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
             ResourceAndTime* resource = ((ResourceAndTime*)[AppDelegate->theNewBookingControlller->BookedResources objectAtIndex:b]);
 			if(resource.RE_KEY == res.RE_KEY)	// Yay! - I'm getting a new booking
 				{
-				Booking asd;
+				Booking *asd = [[Booking alloc] init];
 				asd.RE_KEY = res.RE_KEY;
 				asd.STATUS = UNKNOWN;
 				asd.pcode = P_OPEN;
@@ -509,9 +508,10 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 				
 				CGRect slotRect = rect;
 				slotRect.size.width = AppDelegate->ganttDisplayWidth;
-				
 				AppDelegate->ganttviewcontroller.isCreatingNewBooking=NO;	// Trick colors
-				DrawBooking(slotRect, asd, yStart, y-yStart-5, context, colorspace, &asd.pickRectangle);
+
+				//void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, CGRect *drawRectangle)
+				DrawBooking(slotRect, asd, yStart, y-yStart-5, context, colorspace);
 				AppDelegate->ganttviewcontroller.isCreatingNewBooking=YES;	// Trick colors
 				
 				NSString *StartTime = asd.FROM_TIME.FormatForNewBooking();
@@ -577,6 +577,7 @@ void DrawBookingResource(CGRect rect, Resource &res, float y, float h, CGContext
 				pos.x = asd.pickRectangle.origin.x+asd.pickRectangle.size.width+10;
 				NSString *EndTime = asd.TO_TIME.FormatForNewBooking();
 				[EndTime drawAtPoint:pos withFont:[UIFont fontWithName:@"HelveticaNeue-Bold" size:12]];
+				[asd release];
 				}
 			}
 		}
@@ -618,7 +619,7 @@ void drawGradientWithGloss(CGContextRef context, CGRect rect, CGColorRef startCo
 
 
 
-void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace, CGRect *drawRectangle)
+void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef context, CGColorSpaceRef colorspace)
 {
 	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt->RESOURCENAMEWIDTH;
 	
@@ -652,8 +653,7 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
     float w = xe-xs;
 	
     CGRect rect = CGRectMake(xs,y,w,h);
-	if(drawRectangle)
-		*drawRectangle=rect;// output BBox for touch recognition
+	book.pickRectangle=rect;// output BBox for touch recognition
 	
 	ColorInfo *myColor = [AppDelegate.colorData GetColor:book.STATUS withPCODE:book.pcode];
 	
@@ -910,32 +910,32 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
     CGContextSaveGState(context);
 	CGContextClipToRect (context, CGRectMake(0,HOURLINEYSTART,AppDelegate.ganttDisplayWidth, AppDelegate.ganttDisplayHeight-HOURLINEYSTART));
 	int resourceCount=0;
-    for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
+	for(Resource* res in AppDelegate->viewData.Resources)
 		{
-		if( (AppDelegate.ganttDisplaySelectedOnly == YES && AppDelegate->viewData.Resources[i].Selected == NO) ||
-		   (AppDelegate->ganttviewcontroller.isCreatingNewBooking==YES && AppDelegate->viewData.Resources[i].includeInNewBookingView == NO) )
+		if( (AppDelegate.ganttDisplaySelectedOnly == YES && res.Selected == NO) ||
+		   (AppDelegate->ganttviewcontroller.isCreatingNewBooking==YES && res.includeInNewBookingView == NO) )
 			{
-			AppDelegate->viewData.Resources[i].pickRectangle = CGRectMake(0,0,1,1);		// Make unselectable
-			AppDelegate->viewData.Resources[i].selectRectangle = CGRectMake(0,0,1,1);	// Make unselectable
+			res.pickRectangle = CGRectMake(0,0,1,1);		// Make unselectable
+			res.selectRectangle = CGRectMake(0,0,1,1);	// Make unselectable
 			continue;																	// Don't draw
 			}
 		
 		float thisResourceStartY = y;
 		bool hasDrawnResource=false;
 		// Draw bookings on resource
-		for(size_t b=0;b<AppDelegate->viewData.Resources[i].bookings.size()   ;b++)
+		for(Booking* b in res.bookings)
 			{
-			Date bStart = AppDelegate->viewData.Resources[i].bookings[b].FROM_TIME;
-			Date bEnd = AppDelegate->viewData.Resources[i].bookings[b].TO_TIME;
+			Date bStart = b.FROM_TIME;
+			Date bEnd = b.TO_TIME;
 			if( bStart.IsWithinRange(start,end) || bEnd.IsWithinRange(start,end)  || (bStart.IsEarlierThen(start) && bEnd.IsLaterThen(end)))
 				{
 				if(y > 0 && y < AppDelegate.ganttDisplayHeight) // higher then the current view
 					{
-					DrawBooking(rect, AppDelegate->viewData.Resources[i].bookings[b], y, h, context, colorspace, &AppDelegate->viewData.Resources[i].bookings[b].pickRectangle);
+					DrawBooking(rect, b, y, h, context, colorspace);
 					// check doubleBooking
-					for(size_t b2=b;b2<AppDelegate->viewData.Resources[i].bookings.size()   ;b2++)
+					for(Booking* b2 in res.bookings)
 						if(b!= b2)
-							if( AppDelegate->viewData.Resources[i].bookings[b].overlaps(AppDelegate->viewData.Resources[i].bookings[b2]))  // doubleBooking
+							if( [b overlaps:b2] )  // doubleBooking
 								{
 								//y+= AppDelegate->viewData.Resources[i].Unfolded ? h : h/3; // room for overlap
 								y+=h;
@@ -945,12 +945,12 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 				}
 			}// for all bookings on resource
 		// draw resource name
-		if((AppDelegate->viewData.Resources[i].bookings.size() != 0 || AppDelegate.SettingsDisplayUnbookedResources ) || AppDelegate->viewData.Resources[i].RE_KEY == -1 )
+		if(([res.bookings count] != 0 || AppDelegate.SettingsDisplayUnbookedResources ) || res.RE_KEY == -1 )
 			{
 			hasDrawnResource=true;
 			if(y > 15 && y < AppDelegate.ganttDisplayHeight) // within the current view on the Y axis
 				{
-				DrawBookingResource(rect, AppDelegate->viewData.Resources[i], y+h+4, h, context, colorspace, thisResourceStartY-4);
+				DrawBookingResource(rect, res, y+h+4, h, context, colorspace, thisResourceStartY-4);
 				}
 			}
 		if(hasDrawnResource)
@@ -959,7 +959,9 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 			resourceCount++;
 			}
 		// Update picker rectangle for resource name
-		AppDelegate->viewData.Resources[i].pickRectangle.size.height = y-thisResourceStartY;
+		CGRect re = res.pickRectangle;
+		re.size.height = y-thisResourceStartY;
+		res.pickRectangle = re;
 		if(resourceCount%AppDelegate.ShowLineForEveryLine==0)// seperator line
 			{
 			CGContextSetLineWidth(context, 1.0);

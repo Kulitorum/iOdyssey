@@ -186,7 +186,7 @@
 {
     // When the accessory view button is tapped, add a suitable string to the text view.
     NSMutableString *text = [textView.text mutableCopy];
-	NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_BK_REMARK %d, '%@ %@', '%@';", book->BO_KEY, book->FIRST_NAME,book->LAST_NAME, text];
+	NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_BK_REMARK %d, '%@ %@', '%@';", book.BO_KEY, book.FIRST_NAME,book.LAST_NAME, text];
 	DLog(@"%@", request);
 	[AppDelegate.client executeQuery:request withDelegate:self];
 	[text release];

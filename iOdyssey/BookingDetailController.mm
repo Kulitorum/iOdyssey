@@ -33,7 +33,7 @@ using namespace std;
 
 -(IBAction) Return:(id)sender
 {
-	AppDelegate.lastViewedBookingKey = book->BS_KEY;
+	AppDelegate.lastViewedBookingKey = book.BS_KEY;
 	[AppDelegate.myBookingsController RefreshView];
 	
 	if(self.navigationController == nil)                     // if we are in a modal view
@@ -97,7 +97,7 @@ using namespace std;
 {
 		// If called from the gantt view, remove the add comment button
 	
-	if(book -> MTYPE == 1)// hide signoff button
+	if(book.MTYPE == 1)// hide signoff button
 		{
 		NSLog(@"Show sign off button");
 		[signOffButton setEnabled:TRUE];
@@ -128,22 +128,24 @@ using namespace std;
 	return YES;//(UIInterfaceOrientationIsPortrait(interfaceOrientation));
 }
 
-void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
+void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result)
 {
     //	cout << "FindResourcesForBookingID ID " << BO_KEY << endl;
-    
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-		for(size_t b=0;b<AppDelegate->viewData.Resources[i].bookings.size();b++)
-			if(AppDelegate->viewData.Resources[i].bookings[b].BO_KEY == BO_KEY)
-				result.push_back(&AppDelegate->viewData.Resources[i].bookings[b]);
+    for(Resource *res in AppDelegate->viewData.Resources)
+		for(Booking *b in res.bookings)
+			if(b.BO_KEY == BO_KEY)
+				[result addObject:b];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-    if(indexPath.section < bookings.size())
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+    if(indexPath.section < [bookings count])
+		{
+		[bookings release];
         return 33;	// start, end
+		}
 
 	
 	/*
@@ -152,7 +154,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 	 enum PCODE{P_UNKNOWN, P_OPEN, P_FINISHED, P_APPROVED, P_PRECALC, P_PROFORMA, P_INVOICED, P_LOGGEDOUT, P_ERROR};
 	 */
 	NSString* status;
-	switch(book->STATUS)
+	switch(book.STATUS)
 	{
 		case ROS: status=@"ROS"; break;
 		case BKS: status=@"BKS"; break;
@@ -175,7 +177,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 		case ERROR: status=@"ERROR"; break;
 	}
 	NSString* pcode;
-	switch(book->pcode)
+	switch(book.pcode)
 	{
 		case P_UNKNOWN: pcode=@"UNKNOWN"; break;
 		case P_OPEN: pcode=@"OPEN"; break;
@@ -196,7 +198,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 						 @"Client:		%@\nProject:		%@\nFolder:		%@\nStatus:		%@/%@\nActivity:		%@\n					%d/%@\
                                  \n=====================================\n                           Booking Remark\n=====================================\n%@\
                                  \n=====================================\n                             Folder Remark\n=====================================\n%@",
-                                 book->CL_NAME, book->NAME, book->Folder_name, pcode, status, book->ACTIVITY, book->BO_KEY, book->NAME, book->BK_Remark, book->Folder_remark ];
+                                 book.CL_NAME, book.NAME, book.Folder_name, pcode, status, book.ACTIVITY, book.BO_KEY, book.NAME, book.BK_Remark, book.Folder_remark ];
 
     UIFont *cellFont = [UIFont fontWithName:@"Helvetica" size:12.0];
 	CGSize constraintSize;
@@ -223,31 +225,42 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 
 -  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-    if(section < bookings.size())
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+    if(section < [bookings count])
+		{
+		[bookings release];
         return 2;	// start, end
+		}
     return 1;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-	
-	return bookings.size()+1;	// number of resources booked + comments
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+	int count = [bookings count];
+	[bookings release];
+	return count+1;	// number of resources booked + comments
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
 	
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
 	
-	if(section < bookings.size())// compiled name of resource if we are displaying a resource
+	if(section < [bookings count])// compiled name of resource if we are displaying a resource
 	   {
-	   if([bookings[section]->TYPE compare:@"S"] == NSOrderedSame)
-		   return [[bookings[section]->FIRST_NAME stringByAppendingString:@" "] stringByAppendingString:bookings[section]->LAST_NAME];
-	   return bookings[section]->Resource;
+	   Booking* b = (Booking*)[bookings objectAtIndex:section];
+	   if( [b.TYPE compare:@"S"] == NSOrderedSame)
+		   {
+		   NSString* result = [[b.FIRST_NAME stringByAppendingString:@" "] stringByAppendingString:b.LAST_NAME];
+		   [bookings release];
+		   return result;
+		   }
+	   NSString* result = b.Resource;
+	   [bookings release];
+	   return result;
 	   }
    return @"Booking Info";
 }
@@ -255,12 +268,12 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
+	NSMutableArray * bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
 	
 //	cout << "Cell:" << indexPath.section << ", " << indexPath.row << " of " << bookings.size() << "Bookings" << endl;
 	
-	if(indexPath.section < bookings.size() )
+	if(indexPath.section < [bookings count] )
 		{
 		DateCell *cell = (DateCell *)[table dequeueReusableCellWithIdentifier:@"DateCell_ID"];
 		if (cell == nil)
@@ -284,15 +297,17 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 				}
 			}
 		
+		Booking*b = [bookings objectAtIndex:indexPath.section];
+		
 		switch(indexPath.row)
 			{
 				case 0:	// DateCell start
 				[[cell Title] setText:@"Start"];
-				[[cell dateLabel] setText: bookings[indexPath.section]->FROM_TIME.FormatForSignOffController() ];
+				[[cell dateLabel] setText: b.FROM_TIME.FormatForSignOffController() ];
 				break;
 				case 1:	// DateCell start
 				[[cell Title] setText:@"End"];
-				[[cell dateLabel] setText: bookings[indexPath.section]->TO_TIME.FormatForSignOffController() ];
+				[[cell dateLabel] setText:b.TO_TIME.FormatForSignOffController() ];
 				break;
 			}
 		return cell;
@@ -303,7 +318,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
         commentcell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"COMMENTCELL"] autorelease];
     }
 	NSString* status;
-	switch(book->STATUS)
+	switch(book.STATUS)
 	{
 		case ROS: status=@"ROS"; break;
 		case BKS: status=@"BKS"; break;
@@ -326,7 +341,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 		case ERROR: status=@"ERROR"; break;
 	}
 	NSString* pcode;
-	switch(book->pcode)
+	switch(book.pcode)
 	{
 		case P_UNKNOWN: pcode=@"UNKNOWN"; break;
 		case P_OPEN: pcode=@"OPEN"; break;
@@ -346,7 +361,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result)
 						 @"Client:		%@\nProject:		%@\nFolder:		%@\nStatus:		%@/%@\nActivity:		%@\n					%d/%@\
 						 \n=====================================\n                           Booking Remark\n=====================================\n%@\
 						 \n=====================================\n                             Folder Remark\n=====================================\n%@",
-						 book->CL_NAME, book->NAME, book->Folder_name, pcode, status, book->ACTIVITY, book->BO_KEY, book->NAME, book->BK_Remark, book->Folder_remark ];
+						 book.CL_NAME, book.NAME, book.Folder_name, pcode, status, book.ACTIVITY, book.BO_KEY, book.NAME, book.BK_Remark, book.Folder_remark ];
     commentcell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
     commentcell.textLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
     commentcell.textLabel.numberOfLines = 0;

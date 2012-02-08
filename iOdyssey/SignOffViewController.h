@@ -33,5 +33,5 @@
 - (void)keyboardWillShow:(id)sender;
 
 @property (nonatomic, retain) IBOutlet UITableView *table;
-@property Booking *book;
+@property (nonatomic, retain) Booking *book;
 @end

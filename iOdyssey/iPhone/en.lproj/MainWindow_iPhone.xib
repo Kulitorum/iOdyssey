@@ -54,7 +54,6 @@
 				<object class="NSPSMatrix" key="NSFrameMatrix"/>
 				<string key="NSFrameSize">{320, 480}</string>
 				<reference key="NSSuperview"/>
-				<reference key="NSNextKeyView"/>
 				<object class="NSColor" key="IBUIBackgroundColor" id="757249781">
 					<int key="NSColorSpace">10</int>
 					<object class="NSImage" key="NSImage">
@@ -176,7 +175,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 									<int key="NSvFlags">292</int>
 									<string key="NSFrame">{{114, 8}, {89, 30}}</string>
 									<reference key="NSSuperview" ref="579403752"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:277</string>
 									<bool key="IBUIOpaque">NO</bool>
 									<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -353,7 +351,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 436}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="671655920"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -452,7 +449,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 436}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="7880102"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:345</string>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
@@ -543,7 +539,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 416}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="935598517"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -637,7 +632,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 416}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="1011649940"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -729,7 +723,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 416}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="331587602"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -974,7 +967,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 									<int key="NSvFlags">292</int>
 									<string key="NSFrame">{{142, 211}, {37, 37}}</string>
 									<reference key="NSSuperview" ref="1057403247"/>
-									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:824</string>
 									<bool key="IBUIOpaque">NO</bool>
 									<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -1077,7 +1069,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 					<int key="NSvFlags">292</int>
 					<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 					<reference key="NSSuperview"/>
-					<reference key="NSNextKeyView"/>
 					<string key="NSReuseIdentifierKey">_NS:180</string>
 					<object class="NSColor" key="IBUIBackgroundColor">
 						<int key="NSColorSpace">3</int>
@@ -1129,7 +1120,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{0, 41}, {320, 438}}</string>
 							<reference key="NSSuperview" ref="794549400"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:613</string>
 							<object class="NSColor" key="IBUIBackgroundColor">
 								<int key="NSColorSpace">1</int>
@@ -1177,7 +1167,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{85, 412}, {150, 9}}</string>
 							<reference key="NSSuperview" ref="773308312"/>
-							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:659</string>
 							<bool key="IBUIOpaque">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1237,7 +1226,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{166, 0}, {74, 25}}</string>
 						<reference key="NSSuperview" ref="192112237"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:222</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1320,7 +1308,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{0, 416}, {320, 44}}</string>
 							<reference key="NSSuperview" ref="206852630"/>
-							<reference key="NSNextKeyView"/>
 							<bool key="IBUIOpaque">NO</bool>
 							<bool key="IBUIClearsContextBeforeDrawing">NO</bool>
 							<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -1751,14 +1738,6 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">UpdatedDateLabel</string>
-						<reference key="source" ref="946409151"/>
-						<reference key="destination" ref="66587216"/>
-					</object>
-					<int key="connectionID">570</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">bookingDetailController</string>
 						<reference key="source" ref="946409151"/>
 						<reference key="destination" ref="33045969"/>
@@ -1939,21 +1918,21 @@ AAgACAAIAAEAAQABAAE</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">UpdateData</string>
+						<string key="label">RefreshBookings</string>
 						<reference key="source" ref="121752017"/>
-						<reference key="destination" ref="946409151"/>
+						<reference key="destination" ref="776376858"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">605</int>
+					<int key="connectionID">643</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">UpdateData</string>
+						<string key="label">RefreshBookings</string>
 						<reference key="source" ref="462999960"/>
-						<reference key="destination" ref="946409151"/>
+						<reference key="destination" ref="776376858"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">608</int>
+					<int key="connectionID">642</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -2747,7 +2726,7 @@ AAgACAAIAAEAAQABAAE</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">641</int>
+			<int key="maxID">643</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

@@ -10,26 +10,35 @@
 #include <sstream>
 #include <string>
 #include "iOdysseyAppDelegate.h"
-/*
- string Resource;        // Visual Effects/ Colorist06
- int     ResourceKey;    // number
- CStatus STATUS;     // Hold, book, clients etc
- bool    PCODE;      //?
- int    MTYPE;      //?
- int     BS_KEY;     //?
- Time FROM_TIME;
- Time TO_TIME;
- int     BO_KEY;
- string  FIRST_NAME; // Michael Holm
- string  LAST_NAME;  // unused, alwasy <null>
- string  NAME;       // Online/CC/Effect
- string  BK_Remark;  // remarks
- string  Folder_name; // Project
- string  Folder_remark;// info on project
- string  TYPE;        // S=people | V=machines
- */
 
-void Booking::clear()
+
+@implementation Booking
+
+
+@synthesize Resource;		// Visual Effects/ Colorist06
+@synthesize RE_KEY;				// number
+@synthesize STATUS;				// Hold, book, clients etc
+@synthesize pcode;				// Letter, O=Open(to be done), A=Actual(signed af), P=Proforma (Not invoiced), I=Invoiced, G=Gratis
+@synthesize MTYPE;				// 1=Booking, 2=Hold, 
+@synthesize BS_KEY;				// Booking slot key
+@synthesize BO_KEY;				// Booking key
+@synthesize BOKEYSELECTED;		// highlight booking (not booking slot)
+@synthesize FIRST_NAME;		// Michael 
+@synthesize LAST_NAME;		// Holm
+@synthesize NAME;			// Proejct name
+@synthesize ACTIVITY;		// Online/CC/Effect
+@synthesize BK_Remark;		// remarks
+@synthesize Folder_name;		// Project
+@synthesize Folder_remark;	// info on project
+@synthesize TYPE;			// S=people | V=machines
+@synthesize FROM_TIME;
+@synthesize TO_TIME;
+@synthesize CL_NAME;			// client name
+@synthesize pickRectangle;
+
+
+/*
+-(void) Booking::clear()
 {
     Resource=@"";
     RE_KEY=-1;
@@ -51,8 +60,8 @@ void Booking::clear()
 	CL_NAME = @"";// client name
 	pickRectangle=CGRectMake(0,0,0,0);
 }
-
-void Booking::Print()
+*/
+-(void) Print
 {
 	DLog(@"%@\n%@\n",Resource, NAME);
 	
@@ -63,7 +72,7 @@ void Booking::Print()
 */
 }
 
-bool Booking::overlaps(Booking &other)
+-(bool) overlaps:(Booking*) other
 {
     if( FROM_TIME.IsWithinRange(other.FROM_TIME, other.TO_TIME) || TO_TIME.IsWithinRange(other.FROM_TIME, other.TO_TIME) )
         return true;
@@ -73,28 +82,23 @@ bool Booking::overlaps(Booking &other)
 		return true;
 	if(TO_TIME.nstimeInterval() == other.TO_TIME.nstimeInterval())
 		return true;
-/*	if(FROM_TIME.nstimeInterval() == other.TO_TIME.nstimeInterval())
-		return true;
-	if(TO_TIME.nstimeInterval() == other.FROM_TIME.nstimeInterval())
-		return true;
-*/	
     return false;
 }
 
-bool Booking::overlaps(Date &time)
+-(bool) overlapsDate:(Date) time
 {
     if( time.IsWithinRange(FROM_TIME, TO_TIME) )
         return true;
 	return false;
 }
 
-bool Booking::endsBefore(Date &time)
+-(bool) endsBefore:(Date) time
 {
     if( TO_TIME.nstimeInterval() < time.nstimeInterval() )
         return true;
 	return false;
 }
-
+/*
 void Booking::CopyFrom(const Booking &b)
 {
 	Resource = [[b.Resource copy] retain];
@@ -118,8 +122,9 @@ void Booking::CopyFrom(const Booking &b)
 	pickRectangle = b.pickRectangle;
 	BOKEYSELECTED = b.BOKEYSELECTED;
 }
-
+*/
 //Copy constructor
+/*
 Booking::Booking(const Booking &b)
 {
 	Resource = b.Resource;
@@ -144,7 +149,7 @@ Booking::Booking(const Booking &b)
 	BOKEYSELECTED = NO;
 }
 
-bool Booking::IsSameAs(Booking &other)
+-(bool) Booking::IsSameAs(Booking &other)
 {
 	if(STATUS != other.STATUS) { cout << "STATUS changed state" << endl ; return NO;}
 	if(pcode != other.pcode) { cout << "pcode changed state" << endl ; return NO;}
@@ -181,13 +186,29 @@ bool Booking::IsSameAs(Booking &other)
 
 	return YES;
 }
-
-Booking::~Booking()
+*/
+-(void) dealloc
 {
+    // booking data
+    [Resource release];		// Visual Effects/ Colorist06
+    [FIRST_NAME release];	// Michael 
+    [LAST_NAME release];	// Holm
+    [NAME release];			// Proejct name
+    [ACTIVITY release];		// Online/CC/Effect
+    [BK_Remark release];	// remarks
+    [Folder_name release];	// Project
+    [Folder_remark release];// info on project
+    [TYPE release];			// S=people | V=machines
+	[CL_NAME release];		// client name
+}
+
+- (NSComparisonResult)startsEarlierThen:(Booking *)otherObject
+{
+    return FROM_TIME.nstimeInterval() < otherObject.FROM_TIME.nstimeInterval();
 }
 
 
-
+@end
 
 
 

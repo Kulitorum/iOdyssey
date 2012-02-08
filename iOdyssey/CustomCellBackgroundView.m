@@ -33,7 +33,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect,
     CGContextRef c = UIGraphicsGetCurrentContext();
 	
 	if(progress >= 1)
-		if(book && book->pcode == P_OPEN && book->MTYPE==1)
+		if(book && book.pcode == P_OPEN && book.MTYPE==1)
 			CGContextSetFillColorWithColor(c, [openPassedBookingsColor CGColor]);
 		else
 			CGContextSetFillColorWithColor(c, [passedBookingsColor CGColor]);
@@ -128,7 +128,7 @@ static void addRoundedRectToPath(CGContextRef context, CGRect rect,
 	
     CGContextBeginPath(c);
     addRoundedRectToPath(c, rect, r, r);
-	if(	AppDelegate.lastViewedBookingKey == book->BS_KEY)
+	if(	AppDelegate.lastViewedBookingKey == book.BS_KEY)
 		{
 		[[UIColor colorWithRed:1 green:0.3 blue:0 alpha:1.0] setStroke];
 		CGContextSetLineWidth(c, 3.0);

@@ -76,8 +76,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 	
 	SplashView *splashView;
 	
-	ViewDataController *viewDataController;
-	
     Date displayStart;
     Date displayEnd;
 	float displayStartY;			// The first Y coord of the gantt chart
@@ -86,7 +84,7 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 	float ganttDisplayHeight;		// size of gantt window
 	float ganttResourcesSizeY;		// Total height of the gantt view, needed for scroll-stop.
 	float ganttBookingHeight;		// Height of each booking
-    ViewData viewData;				// Resources and Bookings
+    ViewData *viewData;				// Resources and Bookings
     CGPoint pan;					// Click point for panning
     NSDateFormatter *formatter;		// formatter
 	NSCalendar* calendar;
@@ -145,8 +143,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 @property (nonatomic, retain) NSTimeZone *timeZone;
 @property (nonatomic, retain) NSCalendar *calendar;
 
-@property (nonatomic, retain) ViewDataController *viewDataController;
-
 @property (nonatomic, retain) Consumables *consumables;
 
 @property (nonatomic, retain) LoginData *loginData;
@@ -174,7 +170,7 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 
 @property float displayStartY;
 
-@property ViewData viewData;				// Resources and Bookings
+@property (nonatomic, retain) ViewData *viewData;				// Resources and Bookings
 @property Date displayStart;
 @property Date displayEnd;
 @property Date dataScopeStart;

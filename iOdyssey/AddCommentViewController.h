@@ -59,7 +59,7 @@
 
 @property (nonatomic, retain) IBOutlet UITextView *textView;
 @property (nonatomic, assign) IBOutlet UIView *accessoryView;
-@property Booking *book;
+@property (nonatomic, retain) Booking *book;
 
 - (IBAction)Done:(id)sender;
 - (IBAction)Cancel:(id)sender;

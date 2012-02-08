@@ -34,5 +34,5 @@
 @property (nonatomic, retain) IBOutlet UILabel *DayLabel;
 @property (nonatomic, retain) IBOutlet UILabel *DateLabel;
 @property CStatus STATUS;
-@property Booking *book;
+@property (nonatomic, retain) Booking *book;
 @end

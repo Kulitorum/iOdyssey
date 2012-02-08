@@ -27,7 +27,7 @@ using namespace std;
 
 
 // Externals
-void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
+void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result);
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -41,7 +41,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 
 -(void)CloseBooking
 {
-	NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_BK_SIGNOFF @BO_KEY=%d, @USER=%@", book->BO_KEY, AppDelegate->loginData.loginName];
+	NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_BK_SIGNOFF @BO_KEY=%d, @USER=%@", book.BO_KEY, AppDelegate->loginData.loginName];
 	[AppDelegate.client executeQuery:request withDelegate:self];
 	NSLog(@"%@", request);
 
@@ -65,7 +65,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
         {
 		if(i->newQTY != i->QTY)
 			{
-			NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_SERVICES @BO_KEY=%d, @SC_KEY=%d, @QTY=%d", book->BO_KEY, i->SC_KEY, i->newQTY];
+			NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_SERVICES @BO_KEY=%d, @SC_KEY=%d, @QTY=%d", book.BO_KEY, i->SC_KEY, i->newQTY];
 			NSLog(@"%@", request);
 			[AppDelegate.client executeQuery:request withDelegate:self];
 			runningCommandsCounter++;
@@ -73,12 +73,11 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
         }
     }
 	// IOS_UPDATE_ACTUALS BS_KEY FROM_TIME TO_TME
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-	for(int i=0;i<bookings.size();i++ )
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+	for(Booking* b in bookings)
 		{
-		Booking *b = bookings[i];
-		NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_ACTUALS @BS_KEY=%d, @ACT_FROMTIME='%@', @ACT_TOTIME='%@'", b->BS_KEY, b->FROM_TIME.FormatForSQLWithTime(), b->TO_TIME.FormatForSQLWithTime()];
+		NSString *request = [NSString stringWithFormat:@"EXEC dbo.IOS_UPDATE_ACTUALS @BS_KEY=%d, @ACT_FROMTIME='%@', @ACT_TOTIME='%@'", b.BS_KEY, b.FROM_TIME.FormatForSQLWithTime(), b.TO_TIME.FormatForSQLWithTime()];
 		NSLog(@"%@", request);
 		[AppDelegate.client executeQuery:request withDelegate:self];
 		}
@@ -117,7 +116,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 		[alert show];
 		[alert release];
 		}
-	DLog(@"%@", outputString);
+//	DLog(@"%@", outputString);
 }
 
 
@@ -143,7 +142,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 		}
 	else
 		{
-		AppDelegate.lastViewedBookingKey = book->BS_KEY;
+		AppDelegate.lastViewedBookingKey = book.BS_KEY;
 		[self.navigationController popViewControllerAnimated:YES];// Tell detail view ontroller to stand back
 		[AppDelegate.myBookingsController RefreshView];
 		}
@@ -165,7 +164,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 		}
 	else
 		{
-		//		AppDelegate.lastViewedBookingKey = book->BS_KEY;
+		//		AppDelegate.lastViewedBookingKey = book.BS_KEY;
 		//[self.navigationController popTotheNewBookingControlllerAnimated:YES];// Tell detail view ontroller to stand back
 		//		[AppDelegate.myBookingsController RefreshView];
 		[self.navigationController popViewControllerAnimated:YES];// Tell detail view ontroller to stand back
@@ -228,7 +227,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 												 name:@"ConsumablesReadyNotification"
 											   object:nil];
 	
-	[consumables RequestConsumableData:book->BO_KEY];
+	[consumables RequestConsumableData:book.BO_KEY];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(keyboardWillShow:)
@@ -258,14 +257,18 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-    if(indexPath.section < bookings.size())
+	float result;
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+    if(indexPath.section < [bookings count])
 		if(AppDelegate.IsIpad)
-			return 65;	// start, end
+			result=65;	// start, end
 		else
-			return 55;
-    return 40;// Consumables
+			result=55;
+	result=40;// Consumables
+	
+	[bookings release];
+	return result;
 }
 /*
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -282,39 +285,49 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 
 -  (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-    if(section < bookings.size())
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+	int count = [bookings count];
+	[bookings release];
+    if(section < count)
         return 2;	// start, end
 
-	int serviceGroupNr = section-bookings.size();
+	int serviceGroupNr = section-count;
 
 	return [((SCG*)[consumables->ServiceGroups objectAtIndex:serviceGroupNr])->items count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
-	
-	return bookings.size()+[consumables->ServiceGroups count];
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
+	int count = [bookings count];
+	[bookings release];
+	return count+[consumables->ServiceGroups count];
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
 	
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
 	
-	if(section < bookings.size())// compiled name of resource if we are displaying a resource
+	if(section < [bookings count])// compiled name of resource if we are displaying a resource
 	   {
-	   if([bookings[section]->TYPE compare:@"S"] == NSOrderedSame)
-		   return [[bookings[section]->FIRST_NAME stringByAppendingString:@" "] stringByAppendingString:bookings[section]->LAST_NAME];
-	   return bookings[section]->Resource;
+	   Booking* b = ((Booking*)[bookings objectAtIndex:section]);
+	   if( [b.TYPE compare:@"S"] == NSOrderedSame)
+		   {
+		   NSString* result = [[b.FIRST_NAME stringByAppendingString:@" "] stringByAppendingString:b.LAST_NAME];
+		   [bookings release];
+		   return result;
+		   }
+	   NSString* result = b.Resource;
+	   [bookings release];
+	   return result;
 	   }
 	
-	int serviceGroupNr = section-bookings.size();
-	
+	int serviceGroupNr = section-[bookings count];
+	[bookings release];
 	if(consumables->ServiceGroups == nil)
 		return @"";
 	
@@ -326,12 +339,12 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	vector<Booking*> bookings;
-	FindResourcesForBookingID(book->BO_KEY, bookings);
+	NSMutableArray *bookings = [[NSMutableArray alloc] init];
+	FindResourcesForBookingID(book.BO_KEY, bookings);
 	
 //	cout << "Cell:" << indexPath.section << ", " << indexPath.row << " of " << bookings.size() << "Bookings" << endl;
 	
-	if(indexPath.section < bookings.size() )
+	if(indexPath.section < [bookings count] )
 		{
 		EditableDateCell *cell;
 		if(AppDelegate.IsIpad)
@@ -359,17 +372,21 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 				}
 			}
 		
+		Booking* b = ((Booking*)[bookings objectAtIndex:indexPath.section]);
+		
 		switch(indexPath.row)
 			{
 				case 0:	// EditableDateCell start
 				[[cell Title] setText:@"Start"];
-				[[cell dateLabel] setText: bookings[indexPath.section]->FROM_TIME.FormatForSignOffController() ];
-				[cell setDate:&bookings[indexPath.section]->FROM_TIME];
+				[[cell dateLabel] setText: b.FROM_TIME.FormatForSignOffController() ];
+				NSLog(@"THERE IS A BUG HERE, THE DATE POINTER IS NOT SET");
+//				[cell setDate:b.FROM_TIME];
 				break;
 				case 1:	// EditableDateCell start
 				[[cell Title] setText:@"End"];
-				[[cell dateLabel] setText: bookings[indexPath.section]->TO_TIME.FormatForSignOffController() ];
-				[cell setDate:&bookings[indexPath.section]->TO_TIME];
+				[[cell dateLabel] setText: b.TO_TIME.FormatForSignOffController() ];
+				NSLog(@"THERE IS A BUG HERE, THE DATE POINTER IS NOT SET");
+//				[cell setDate:&bookings[indexPath.section].TO_TIME];
 				break;
 			}
 		return cell;
@@ -401,7 +418,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 	if(consumables == nil || consumables->ServiceGroups == nil)
 		return cell;
 
-	int serviceGroupNr = indexPath.section-bookings.size();
+	int serviceGroupNr = indexPath.section-[bookings count];
 	SCG* S = ((SCG*)[consumables->ServiceGroups objectAtIndex:serviceGroupNr]);
 
 	id obj = [S->items objectAtIndex:indexPath.row];

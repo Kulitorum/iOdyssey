@@ -27,7 +27,7 @@ typedef enum  {
 }
 
 @property(nonatomic, retain) UIColor *borderColor, *fillColor, *progressColor, *passedBookingsColor, *openPassedBookingsColor;
-@property(nonatomic) Booking *book;
+@property(nonatomic, retain) Booking *book;
 @property(nonatomic) CustomCellBackgroundViewPosition position;
 @property(nonatomic) float progress;
 @end

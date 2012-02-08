@@ -113,16 +113,16 @@
 		return 75;
 
 	int myResourceKey = AppDelegate.loginData.Login.RE_KEY;
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-		if(AppDelegate->viewData.Resources[i].RE_KEY == myResourceKey)
-			if(AppDelegate->viewData.Resources[i].bookings.size() == 0)
+	for(Resource *res in AppDelegate->viewData.Resources)
+		if(res.RE_KEY == myResourceKey)
+			if([res.bookings count] == 0)
 				return 430;
 			else
 				return 75;
 	return 75;	// quiet compiler
 }
 
-bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
+bool BookingStartTimeSortPredicate(Booking* d1, Booking* d2)
 {
 	return d1.FROM_TIME.nstimeInterval() < d2.FROM_TIME.nstimeInterval();
 }
@@ -141,24 +141,25 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	[ResourceName setText:AppDelegate.loginData.Login.FULL_NAME];
 	
 	// Sort entries by date
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-		if(AppDelegate->viewData.Resources[i].RE_KEY == myResourceKey)
-			std::sort(AppDelegate->viewData.Resources[i].bookings.begin(), AppDelegate->viewData.Resources[i].bookings.end(), BookingStartTimeSortPredicate);
+	for(Resource* res in AppDelegate->viewData.Resources)
+		if(res.RE_KEY == myResourceKey)
+			{
+			[res sortBookingsByStartDate];
+			break;
+			}
 
 	[DisplayScopeLabel setText:[NSString stringWithFormat:@"%@ - %@", AppDelegate.dataScopeStart.FormatForDataScopeView(), AppDelegate.dataScopeEnd.FormatForDataScopeView()]];
 	[table performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
     // Find the selected booking in the my bookings controller
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-		for(size_t b = 0; b<AppDelegate->viewData.Resources[i].bookings.size() ; b++)
-        {
-            if(AppDelegate->viewData.Resources[i].bookings[b].BO_KEY == AppDelegate.selected_BO_KEY)
-            {
-			BookingDetailController *cnt=AppDelegate.MyBookingsAndDrillDown.myBookingsController->bookingDetailController;
-			cnt.book = &AppDelegate->viewData.Resources[i].bookings[b];
-			[cnt.table performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
-			return;
-            }
-        }
+	for(Resource* res in AppDelegate->viewData.Resources)
+		for(Booking* b in res.bookings)
+            if(b.BO_KEY == AppDelegate.selected_BO_KEY)
+				{
+				BookingDetailController *cnt=AppDelegate.MyBookingsAndDrillDown.myBookingsController->bookingDetailController;
+				cnt.book = b;
+				[cnt.table performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+				return;
+				}
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -201,14 +202,14 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	BookingsPrDay.resize(start.daysBetweenDate(end));
 	
 	int myResourceKey = AppDelegate.loginData.Login.RE_KEY;
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
+	for(Resource* res in AppDelegate->viewData.Resources)
 		{
-		if(AppDelegate->viewData.Resources[i].RE_KEY == myResourceKey)
+		if(res.RE_KEY == myResourceKey)
 			{
 			// How many of the bookings are today?
-			for(int b=0;b<AppDelegate->viewData.Resources[i].bookings.size() ; b++)
+			for(Booking* b in res.bookings)
 				{
-				int DayNr = AppDelegate.dataScopeStart.daysBetweenDate(AppDelegate->viewData.Resources[i].bookings[b].FROM_TIME);
+				int DayNr = AppDelegate.dataScopeStart.daysBetweenDate(b.FROM_TIME);
 				BookingsPrDay[DayNr]++;
 				}
 			}
@@ -249,11 +250,11 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	
 	int myResourceKey = AppDelegate.loginData.Login.RE_KEY;
 
-	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
+	for(Resource* res in AppDelegate->viewData.Resources)
 		{
-		if(AppDelegate->viewData.Resources[i].RE_KEY == myResourceKey)
+		if(res.RE_KEY == myResourceKey)
 			{
-			if(AppDelegate->viewData.Resources[i].bookings.size() == 0)	// we have no bookings, inform about this
+			if([res.bookings count] == 0)	// we have no bookings, inform about this
 				{
 				EmptyBookingCell *cell = (EmptyBookingCell *)[table dequeueReusableCellWithIdentifier:@"EmptyBookingCell"];
 				
@@ -285,9 +286,11 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 				BookingNr+= BookingsPrDay[d];
 			BookingNr+= indexPath.row;
 			
-			[[cell StartTime] setText:[TimeFormatter stringFromDate:AppDelegate->viewData.Resources[i].bookings[BookingNr].FROM_TIME.nsdate()]];
-			[[cell EndTime] setText:[TimeFormatter stringFromDate:AppDelegate->viewData.Resources[i].bookings[BookingNr].TO_TIME.nsdate()]];
-			[[cell Component] setText:[NSString stringWithFormat:@"%@ / %@", AppDelegate->viewData.Resources[i].bookings[BookingNr].ACTIVITY, AppDelegate->viewData.Resources[i].bookings[BookingNr].Folder_name ]];
+			Booking* b = (Booking*)[res.bookings objectAtIndex:BookingNr];
+			
+			[[cell StartTime] setText:[TimeFormatter stringFromDate:b.FROM_TIME.nsdate()]];
+			[[cell EndTime] setText:[TimeFormatter stringFromDate:b.TO_TIME.nsdate()]];
+			[[cell Component] setText:[NSString stringWithFormat:@"%@ / %@", b.ACTIVITY, b.Folder_name ]];
 			
 			//			DLog(@" indexPath.section : %d Bookings for day %d: %d\n", indexPath.section, indexPath.section, BookingsPrDay[indexPath.section]);
 			
@@ -298,9 +301,9 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 			[bgView setProgressColor:[UIColor colorWithRed:0.7 green:0.9 blue:0.7 alpha:1.0]];
 			[bgView setPassedBookingsColor:[UIColor colorWithRed:0.8 green:0.8 blue:0.8 alpha:1.0]];
 			[bgView setOpenPassedBookingsColor:[UIColor colorWithRed:1 green:0.6 blue:0.6 alpha:1.0]];
-			[bgView setBook:&AppDelegate->viewData.Resources[i].bookings[BookingNr]];
+			[bgView setBook:b];
 
-			PCODE pc = AppDelegate->viewData.Resources[i].bookings[BookingNr].pcode;
+			PCODE pc = b.pcode;
 			
 			if(pc == P_FINISHED || pc == P_INVOICED || pc == P_APPROVED)
 				{
@@ -330,21 +333,20 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 			// Progress
 			NSDate* a = [NSDate date];
 			Date now(a);
-			Booking *book = &AppDelegate->viewData.Resources[i].bookings[BookingNr];
-			float t = (now-book->FROM_TIME).nstimeInterval()/(book->TO_TIME.nstimeInterval() - book->FROM_TIME.nstimeInterval());
+			float t = (now-b.FROM_TIME).nstimeInterval()/(b.TO_TIME.nstimeInterval() - b.FROM_TIME.nstimeInterval());
 			bgView.progress = t;
 			
 			cell.backgroundView = bgView;
 			[bgView release];
 			
-			[[cell Client] setText:AppDelegate->viewData.Resources[i].bookings[BookingNr].CL_NAME ];
+			[[cell Client] setText:b.CL_NAME ];
 /*
  enum CStatus{ROS, BKS, BK, A16, A35, HL1, HL2, IO, CNI, CND, P01, NA, MET, TRA, SIP, GRATIS, INVOICED, UNKNOWN, ERROR};
  
  enum PCODE{P_UNKNOWN, P_OPEN, P_FINISHED, P_APPROVED, P_PRECALC, P_PROFORMA, P_INVOICED, P_LOGGEDOUT, P_ERROR};
 */
 			NSString* status;
-			switch(AppDelegate->viewData.Resources[i].bookings[BookingNr].STATUS)
+			switch(b.STATUS)
 				{
 					case ROS: status=@"ROS"; break;
 					case BKS: status=@"BKS"; break;
@@ -367,7 +369,7 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 					case ERROR: status=@"ERROR"; break;
 				}
 			NSString* pcode;
-			switch(AppDelegate->viewData.Resources[i].bookings[BookingNr].pcode)
+			switch(b.pcode)
 				{
 					case P_UNKNOWN: pcode=@"UNKNOWN"; break;
 					case P_OPEN: pcode=@"OPEN"; break;
@@ -382,13 +384,13 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 					case P_ERROR: pcode=@"ERROR"; break;
 				}
 			
-			[[cell Activity] setText: [NSString stringWithFormat:@"%@ / %@ / %d / %@", status, pcode, AppDelegate->viewData.Resources[i].bookings[BookingNr].BO_KEY , AppDelegate->viewData.Resources[i].bookings[BookingNr].NAME]];
+			[[cell Activity] setText: [NSString stringWithFormat:@"%@ / %@ / %d / %@", status, pcode, b.BO_KEY , b.NAME]];
 		
 			
 //			[[cell DayLabel] setText:[DayNameFormatter stringFromDate:AppDelegate->viewData.Resources[i].bookings[BookingNr].FROM_TIME.nsdate()]];
 //			[[cell DateLabel] setText:[ShortDateTimeFormatter stringFromDate:AppDelegate->viewData.Resources[i].bookings[BookingNr].FROM_TIME.nsdate()]];
-			cell.STATUS = AppDelegate->viewData.Resources[i].bookings[BookingNr].STATUS;
-			cell.book = &AppDelegate->viewData.Resources[i].bookings[BookingNr];
+			cell.STATUS = b.STATUS;
+			cell.book = b;
 			return cell;
 			}
 		}
@@ -401,7 +403,7 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	MyBookingCell *cell = (MyBookingCell*)[tableView cellForRowAtIndexPath:indexPath];
 	bookingDetailController.book = cell.book;
     [bookingDetailController.table reloadData];
-    AppDelegate.selected_BO_KEY = cell.book->BO_KEY;
+    AppDelegate.selected_BO_KEY = cell.book.BO_KEY;
 	
     [self.navigationController pushViewController:bookingDetailController animated:YES];
 }
@@ -412,7 +414,7 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	[cell setNeedsDisplay];
 	bookingDetailController.book = cell.book;
     [bookingDetailController.table reloadData];
-    AppDelegate.selected_BO_KEY = cell.book->BO_KEY;
+    AppDelegate.selected_BO_KEY = cell.book.BO_KEY;
 	
     [self.navigationController pushViewController:bookingDetailController animated:YES];
 }
@@ -437,12 +439,6 @@ bool BookingStartTimeSortPredicate(const Booking& d1, const Booking& d2)
 	[UIView commitAnimations];
 }
 
--(void) UpdateData
-{
-	[AppDelegate.MyBookingsAndDrillDown.activityIndicator startAnimating];
-	[AppDelegate.ganttviewcontroller.activityIndicator startAnimating];
-	[AppDelegate->viewDataController RefreshMyBookings];
-}
 
 
 
