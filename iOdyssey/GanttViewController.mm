@@ -71,11 +71,8 @@ int lastPickedResource;
 	[self SetCombinationButtonLabel];
 	[self.gantt RequestResourceData];
 
-	int HOURLINEYSTART=28;
-//	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,HOURLINEYSTART,AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH, AppDelegate->ganttDisplayHeight-HOURLINEYSTART-40);
-	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
-	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
-	self.gantt.contentSizeNeedsUpadte = YES;
+	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
+	[gantt.invisibleScrollView setContentOffset:CGPointMake(1024-RESOURCENAMEWIDTH,0) animated:NO];
 }
 
 -(void) SetCombinationButtonLabel
@@ -171,7 +168,6 @@ int lastPickedResource;
 	else
 		[GanttToolBar setFrame:CGRectMake(0, self.view.bounds.size.height-30, self.view.bounds.size.width, 30)];
 
-	self.gantt.contentSizeNeedsUpadte = YES;
 }
 
 - (void)viewDidLoad
@@ -208,7 +204,6 @@ int lastPickedResource;
 											 selector:@selector(receiveTestNotification:) 
 												 name:@"TestNotification"
 											   object:nil];
-	self.gantt.contentSizeNeedsUpadte = YES;
 }
 
 /* Combination selection popup */
@@ -290,11 +285,18 @@ int lastPickedResource;
 	AppDelegate.dataScopeStart = AppDelegate.displayStart.DaysBefore(AppDelegate.DataScopeBack);
 	AppDelegate.dataScopeEnd = AppDelegate.displayEnd.DaysAfter(AppDelegate.DataScopeForward);
 	
-	NSString *request = [NSString stringWithFormat:@"SELECT * FROM  vw_staff_schedule WHERE (RV_KEY = %d OR RE_KEY = %d) AND FROM_TIME BETWEEN '%@' AND '%@' AND SITE_KEY = %d",
+	NSString *S = AppDelegate.dataScopeStart.FormatForSQL();
+	NSString *E = AppDelegate.dataScopeEnd.FormatForSQL();
+	
+	NSString *request = [NSString stringWithFormat:@"SELECT * FROM  vw_staff_schedule WHERE (RV_KEY = %d OR RE_KEY = %d) AND ((FROM_TIME BETWEEN '%@' AND '%@') OR (TO_TIME BETWEEN '%@' AND '%@') OR (FROM_TIME <= '%@' AND TO_TIME >= '%@' )) AND SITE_KEY = %d",
 						 AppDelegate.SelectedCombination,
 						 AppDelegate->loginData.Login.RE_KEY,
-						 AppDelegate.dataScopeStart.FormatForSQL(),
-						 AppDelegate.dataScopeEnd.FormatForSQL(),
+						 S,
+						 E,
+						 S,
+						 E,
+						 S,
+						 E,
 						 AppDelegate->loginData.Login.SITE_KEY];
 	
 	DLog(@"%@", request);
@@ -348,15 +350,17 @@ bool BookingSortPredicate(const Booking& d1, const Booking& d2)
 		AppDelegate->viewData.Clear();
 		for (SqlResultSet *resultSet in query.resultSets)
 			{
-			/*			for (int i = 0; i < resultSet.fieldCount; i++)
+			/*
+			NSMutableString* outputString = [[NSMutableString alloc] initWithCapacity:5000];
+			for (int i = 0; i < resultSet.fieldCount; i++)
 			 {
 			 [outputString appendFormat:@"%@ ", [resultSet nameForField:i]];
 			 }
-			 string theFieldList([outputString UTF8String]);
-			 
 			 [outputString appendString:@"\r\n--------\r\n"];
-			 */
 			
+			NSLog(@"%@", outputString);
+			[outputString release];
+			 */
 			/*
 			 unsigned char  ResourceP = [resultSet indexForField:@"Resource"];
 			 Resource = [[resultSet getString:ResourceP compare:@"S"] UTF8String];
@@ -395,6 +399,20 @@ bool BookingSortPredicate(const Booking& d1, const Booking& d2)
 				 [outputString appendFormat:@"%@ | ", [resultSet getData:i]];
 				 [outputString appendString:@"\r\n"];
 				 DLog(@"%@\n",outputString);*/
+				
+				
+				/*
+				Requesting booking data
+				2012-02-07 23:44:39.753 iOdyssey[63257:f803] -[GanttViewController RequestBookingData] [Line 300] SELECT * FROM  vw_staff_schedule WHERE (RV_KEY = 129 OR RE_KEY = 2803) AND FROM_TIME BETWEEN '2012-02-06' AND '2012-02-14' AND SITE_KEY = 44001
+				Got booking data, processing
+				2012-02-07 23:44:39.910 iOdyssey[63257:f803] -[GanttViewController sqlQueryDidFinishExecuting:] [Line 397] Staff 02 (MH) | 2803 | BK | O | 1 | 644412 | 2012-02-06 02:00:00 +0000 | 2012-02-06 03:00:00 +0000 | 208640 | Michael | Holm | Ipad | > 2012-02-07 20:23 - MichaelH iPad/ Iphone
+				
+				
+				Iphone | Everything |  | S | 128 | Big Apple Production | Compositing | 44001 | 
+				
+				2012-02-07 23:44:39.910 iOdyssey[63257:f803] -[GanttViewController sqlQueryDidFinishExecuting:] [Line 397] Staff 02 (MH) | 2803 | BK | O | 1 | 644409 | 2012-02-06 03:45:00 +0000 | 2012-02-06 05:45:00 +0000 | 208637 | Michael | Holm | Ipad | > 2012-02-07 20:21 - MichaelH iPad/ Iphone
+				*/
+				
 				book.clear();
 				
 				book.BO_KEY = [resultSet getInteger:BO_KEY];
@@ -1161,10 +1179,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	
 	int HOURLINEYSTART=28;
 	
-	
-	
 	CGRect scrollViewFrame = CGRectMake(1024-gantt.RESOURCENAMEWIDTH,-HOURLINEYSTART,1024-gantt.RESOURCENAMEWIDTH, 768-HOURLINEYSTART-40);
-//	CGRect scrollViewFrame = CGRectMake(AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH,-HOURLINEYSTART,AppDelegate->ganttDisplayWidth-gantt.RESOURCENAMEWIDTH, AppDelegate->ganttDisplayHeight-HOURLINEYSTART-40);
 	[gantt.invisibleScrollView scrollRectToVisible:scrollViewFrame animated:YES];
 	
     for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)// for all resources
@@ -1332,9 +1347,6 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_2) // any zoom scale changes
 {
-//	NSLog(@"%f %f %f %f",gantt.bogosViewForZooming.frame.origin.x, gantt.bogosViewForZooming.frame.origin.y, gantt.bogosViewForZooming.frame.size.width, gantt.bogosViewForZooming.frame.size.height);
-
-//	NSLog(@"%f", gantt.bogosViewForZooming.contentScaleFactor);
 	NSLog(@"%f", gantt.invisibleScrollView.zoomScale);
 	
 }
@@ -1430,12 +1442,6 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView // called when setContentOffset/scrollRectVisible:animated: finishes. not called if not animating
 {
-}
-
-
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView     // return a view that will be scaled. if delegate returns nil, nothing happens
-{
-	return gantt.bogosViewForZooming;//nil;
 }
 
 - (void)scrollViewWillBeginZooming:(UIScrollView *)scrollView withView:(UIView *)view __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_2) // called before the scroll view begins zooming its content

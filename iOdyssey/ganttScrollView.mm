@@ -14,6 +14,20 @@
 
 
 
+
+/*
+
+ ENABLE FOR NONPAGE ON Y AXIS
+ 
+ - (BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event
+{
+    CGPoint parentLocation = CGPointMake(point.x - self.bounds.origin.x, point.y - self.bounds.origin.y);
+    CGRect responseRect = self.frame;
+    responseRect.size.height += 1024;//(responseInsets.top + responseInsets.bottom);
+	
+    return CGRectContainsPoint(responseRect, parentLocation);
+}
+*/
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
 	NSLog(@"GanttScrollView:touchesBegan");

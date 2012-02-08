@@ -95,7 +95,7 @@ void FindResourcesForBookingID( int BO_KEY, std::vector<Booking*> &result);
 	//SC_KEY SC_NAME IS_CURRENT SITE_KEY UNIT SC_ID BO_KEY PI_NAME 
 	
 	cout << "Got SignOff Data, Processing" << endl;
-	NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
+//	NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
 	if (query.succeeded)
 		{
 		if(runningCommandsCounter == -1) // just signed it off

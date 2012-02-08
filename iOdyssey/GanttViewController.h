@@ -25,6 +25,7 @@
 	bool isShowingMyBookings;
 	bool isShowingBookingDetailView;
 }
+
 @property (nonatomic, retain) IBOutlet GanttView *gantt;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, retain) IBOutlet UIToolbar *toolBar;

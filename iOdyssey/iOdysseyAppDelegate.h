@@ -111,7 +111,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 	int SelectedCombination;
 	
 	bool ganttDisplaySmallLarge; // 0=small, 1=large
-	bool ganttDisplayStyle; // 0=8h, 1=24h
 	bool ganttDisplaySelectedOnly; // 0=8h, 1=24h
 	bool ganttFastDraw;
 	
@@ -122,8 +121,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 
     int selected_BO_KEY;
 	UIBarButtonItem *NewBookingButton;
-	
-	bool IOS5;
 }
 
 @property (nonatomic, retain) SqlClient *client;
@@ -166,8 +163,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 
 @property (nonatomic, assign) int lastViewedBookingKey;
 
-@property bool IOS5;
-
 @property bool loginOK;
 @property bool HasCombinationData;
 
@@ -186,7 +181,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 @property Date dataScopeEnd;
 @property (nonatomic, retain) NSDateFormatter *formatter;		// formatter
 
-@property bool ganttDisplayStyle;
 @property bool ganttDisplaySelectedOnly;
 @property bool ganttDisplaySmallLarge;
 @property bool ganttFastDraw;
@@ -207,7 +201,6 @@ enum ORIENTATION{ORIENTATION_LANDSCAPE, ORIENTATION_PORTRAIT, ORIENTATION_UNKNOW
 @property int selected_BO_KEY;
 
 -(IBAction)textFieldDoneEditing:(id)sender;
--(IBAction)SetGanttDisplayStyle:(id)sender;
 -(IBAction)SetGanttDisplaySelectedOnly:(id)sender;
 -(IBAction)SetGanttDisplaySmallLarge:(id)sender;
 -(IBAction)GanttNextDay;

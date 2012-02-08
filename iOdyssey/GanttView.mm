@@ -28,10 +28,8 @@ using namespace std;
 @synthesize DoneUpdating;
 @synthesize RESOURCENAMEWIDTH;
 @synthesize needsInit;
-@synthesize contentSizeNeedsUpadte;
 
 @synthesize invisibleScrollView;
-@synthesize bogosViewForZooming;
 
 int HOURLINEYSTART=28;
 
@@ -140,7 +138,6 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	if([AppDelegate RequestNextDataType] == NO)
 		[AppDelegate->ganttviewcontroller RequestBookingData];
 	
-	contentSizeNeedsUpadte=YES;
 }
 
 /*
@@ -633,61 +630,12 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 	Date dStart = AppDelegate.displayStart;
 	Date dEnd = AppDelegate.displayEnd;
 	
-	// Manupulate dStart and dEnd if AppDelegate.ganttDisplayStyle == 0 (8 hours)
-	
     Date displayWidth = dEnd-dStart;
     Date BookingStart = book.FROM_TIME - dStart;
     Date BookingEnd = book.TO_TIME - dStart;
 	
-	/*
-	 if(AppDelegate.ganttDisplayStyle == 0)
-	 {
-	 // if the display spans more then 1 day, check if the booking is valid inside what days.
-	 if(BookingStart.HourValue() < 7)
-	 {
-	 
-	 }
-	 if(BookingEnd.HourValue() > 18)stu
-	 {
-	 
-	 }
-	 }
-	 */
-	
 	double DayNrStart = (double)BookingStart.nstimeInterval() / 86400.0;	// 2.42 = 0.42 into day 2
 	double DayNrEnd = (double)BookingEnd.nstimeInterval() / 86400.0;	// 2.42 = 0.42 into day 2
-	
-	double displayHourStart = 8.0/24.0;
-	double displayHourEnd = 18.0/24.0;
-	
-	double displayHourMult = 1.0f/(displayHourEnd-displayHourStart);
-	
-	if(AppDelegate.ganttDisplayStyle == 0) //8h
-		{
-		int dayS = floor(DayNrStart);
-		double HourS = ((DayNrStart-dayS)-displayHourStart)*displayHourMult;
-		
-		int dayE = floor(DayNrEnd);
-		double HourE = ((DayNrEnd-dayE)-displayHourStart)*displayHourMult;
-		
-		if(HourS > 1) return;	// start after display end, skip
-		if(HourE < 0) return;	// end is before display start, skip
-		
-		if(HourS < 0) HourS=0;
-		if(HourE < 0) HourE=0;
-		if(HourS > 1) HourS=1;
-		if(HourE > 1) HourE=1;
-		
-		
-		
-		DayNrStart = dayS+HourS;
-		DayNrEnd = dayE+HourE;
-		}
-	
-	/*	
-	 double tStart = (double)BookingStart.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
-	 double tEnd = (double)BookingEnd.nstimeInterval()/(double)displayWidth.nstimeInterval();   // 10
-	 */
 	
 	double tStart = DayNrStart/((double)displayWidth.nstimeInterval()/86400);
 	double tEnd = DayNrEnd/((double)displayWidth.nstimeInterval()/86400);
@@ -877,11 +825,10 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		GREY_COLOR = CGColorCreate(colorspace, GREY_COLOR_components);   // define color
 		needsInit=NO;
 
-//		float w = AppDelegate->ganttDisplayWidth;
 		float h = AppDelegate->ganttDisplayHeight;
 		
-//		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,w-RESOURCENAMEWIDTH, h-HOURLINEYSTART-40);
 		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,1024-RESOURCENAMEWIDTH, h-HOURLINEYSTART-40);
+//		CGRect scrollViewFrame = CGRectMake(RESOURCENAMEWIDTH,HOURLINEYSTART,1024-RESOURCENAMEWIDTH, 1);	// USE FOR NON-PAGE Y AXIS (check ganttScrollView.mm)
 		invisibleScrollView = [[GanttScrollView alloc] initWithFrame:scrollViewFrame];
 		[invisibleScrollView setDelegate:AppDelegate->ganttviewcontroller];
 		invisibleScrollView.userInteractionEnabled = YES;
@@ -894,24 +841,15 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		invisibleScrollView.scrollsToTop = NO;
 		invisibleScrollView.contentOffset = CGPointMake(1024-RESOURCENAMEWIDTH, 0);
 
-		if(AppDelegate.IOS5 == YES)	// 
-			invisibleScrollView.pagingEnabled = NO;
-		else
-			invisibleScrollView.pagingEnabled = YES;
+		invisibleScrollView.pagingEnabled = YES;
+		invisibleScrollView.directionalLockEnabled = YES;
 		invisibleScrollView.bounces = YES;
 		
-		/*
-		bogosViewForZooming = [[UIView alloc] initWithFrame:CGRectMake(0,0,1000,1000)];
-		UIImage *img = [UIImage imageNamed:@"1236x500.png"];
-		UIImageView *asd = [[UIImageView alloc] initWithImage:img];
-		[bogosViewForZooming addSubview:asd];
-		[asd release];
-		[invisibleScrollView addSubview:bogosViewForZooming];
-		*/
-		
 		[self addSubview:invisibleScrollView];
-		contentSizeNeedsUpadte = YES;
 		}
+
+	invisibleScrollView.contentSize = CGSizeMake((1024-RESOURCENAMEWIDTH)*3,AppDelegate.ganttResourcesSizeY-HOURLINEYSTART);
+
 	
 	if(selectedResourceImage == nil)
 		selectedResourceImage = [[UIImage imageNamed:@"selectednoframe.png"] retain];
@@ -1036,20 +974,6 @@ void DrawBooking(CGRect rectangle, Booking &book, float y, float h, CGContextRef
 		}
 	
 	AppDelegate.ganttResourcesSizeY = y + AppDelegate.displayStartY;						// Needed for scroll-stop
-
-	// update scrollview Y
-	if(contentSizeNeedsUpadte)
-		{
-		CGSize newContentSize = invisibleScrollView.contentSize;
-		newContentSize.height = y + AppDelegate.displayStartY;
-		if(newContentSize.height != invisibleScrollView.contentSize.height)
-			{
-			invisibleScrollView.contentSize = newContentSize;
-			NSLog(@"Contentsize:%f,%f", newContentSize.width, newContentSize.height);
-			}
-		contentSizeNeedsUpadte=NO;
-		}
-	
 	CGContextRestoreGState(context);
 	
 	// Draw LEFT edge line

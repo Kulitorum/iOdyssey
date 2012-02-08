@@ -66,13 +66,11 @@
 @synthesize splashViewController;
 @synthesize viewDataController;
 @synthesize dataScopeStart, dataScopeEnd;
-@synthesize ganttDisplayStyle;
 @synthesize ganttDisplaySelectedOnly;
 @synthesize ganttDisplaySmallLarge;
 @synthesize ganttFastDraw;
 @synthesize clientSearchController;
 @synthesize theNewBookingControlller;
-@synthesize IOS5;
 @synthesize timeZone;
 @synthesize calendar;
 
@@ -98,18 +96,6 @@ iOdysseyAppDelegate* AppDelegate;
 {
 	AppDelegate = self;	// setup global pointer to self
 
-	NSComparisonResult order = [[UIDevice currentDevice].systemVersion compare: @"5.0" options: NSNumericSearch];
-	if (order == NSOrderedSame || order == NSOrderedDescending)
-		{
-		IOS5=YES;
-		}
-	else
-		{
-		IOS5=NO;
-		}
-
-    IOS5=NO;
-    
 	NSLog(@"%@", [[UIDevice currentDevice] systemVersion]);
 	
 	// Set the application defaults
@@ -156,7 +142,6 @@ iOdysseyAppDelegate* AppDelegate;
 	
 	displayStartY = 0;
 	
-	ganttDisplayStyle=YES;	//24h default
 	ganttDisplaySelectedOnly = NO;
 	ganttFastDraw = NO;
 	
@@ -507,14 +492,6 @@ iOdysseyAppDelegate* AppDelegate;
 	DLog(@"GanttDisplaySelectedOnly: %d", ganttDisplaySelectedOnly);
 }
 
--(IBAction)SetGanttDisplayStyle:(id)sender
-{
-	UISegmentedControl *s=(UISegmentedControl *)sender;
-	int selected = [s selectedSegmentIndex];
-	ganttDisplayStyle = (bool)selected;
-	[self.ganttviewcontroller.gantt setNeedsDisplay];
-	DLog(@"ganttDisplayStyle: %d", ganttDisplayStyle);
-}
 -(void)SetGanttDisplaySmallLarge:(id)sender
 {
 	UISegmentedControl *s=(UISegmentedControl *)sender;
@@ -524,6 +501,9 @@ iOdysseyAppDelegate* AppDelegate;
 		AppDelegate.displayStartY=0;
 	[self.ganttviewcontroller.gantt setNeedsDisplay];
 	DLog(@"ganttDisplaySmallLarge: %d", ganttDisplaySmallLarge);
+
+	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
+	[ganttviewcontroller.gantt.invisibleScrollView setContentOffset:CGPointMake(1024-RESOURCENAMEWIDTH,0) animated:NO];
 }
 
 -(IBAction)textFieldDoneEditing:(id)sender

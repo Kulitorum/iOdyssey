@@ -212,6 +212,14 @@
 		C.PR_NAME = @"No Project selected";
 		AppDelegate->projectData->projects.push_back(C);
 		}
+#else
+	if([AppDelegate.projectData Count] == 0)
+		{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selected client does not have any projects defined" message:@"You have to create a project on a Odyssey workstation before you can create bookings on your iPad" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+		[alert show];
+		[alert release];   
+		return;
+		}
 #endif
 	[self presentModalViewController:AppDelegate.projectData animated:YES];
 }
@@ -225,7 +233,16 @@
 		C.NAME = @"No Folder selected";
 		AppDelegate->folderData->folders.push_back(C);
 		}
+#else
+	if(AppDelegate->folderData->folders.size() == 0)
+		{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Selected client and project does not have any folders defined" message:@"You have to create theese on a Odyssey workstation before you can create bookings on your iPad" delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+		[alert show];
+		[alert release];   
+		return;
+		}
 #endif
+	
 	[self presentModalViewController:AppDelegate.folderData animated:YES];
 }
 
@@ -254,7 +271,11 @@
 		{
 		[AppDelegate.projectData RequestProjectData:CL_KEY];
 		[AppDelegate.folderData clear];
+
+		[ProjectButton setTitle:@"Select Project" forState:UIControlStateNormal];
+		[FolderButton setTitle:@"Select Folder" forState:UIControlStateNormal];
 		[AppDelegate->theNewBookingControlller.ProjectButton setEnabled:YES];
+		[AppDelegate->theNewBookingControlller.FolderButton setEnabled:NO];
 		}
 	else
 		{
@@ -384,6 +405,14 @@
 	@KeyList = N'101,109'  -- RE_KEYS for booking slots
 	*/
 
+	if([BookedResources count] == 0)
+		{
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Woops" message:@"You forgot to set the start and end times of the booking." delegate:self cancelButtonTitle:@"Oh, right...." otherButtonTitles: nil];
+		[alert show];
+		[alert release]; 
+		return;
+		}
+	
 	if(CL_KEY == 0)
 		{
 		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Information" message:@"Please select a Client, Project and Folder." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];

@@ -83,13 +83,6 @@
 		{
 		for (SqlResultSet *resultSet in query.resultSets)
 			{
-/*			for (int i = 0; i < resultSet.fieldCount; i++)
-				{
-				[outputString appendFormat:@"%@ ", [resultSet nameForField:i]];
-				}
-			[outputString appendString:@"\r\n--------\r\n"];
-*/			
-			
 			NSInteger WO_KEY = [resultSet indexForField:@"WO_KEY"];
 			NSInteger NAME = [resultSet indexForField:@"NAME"];
 			
@@ -113,7 +106,6 @@
 					continue;
 				folders.push_back(C);
 				}
-			
 			}
 		}
 	else
