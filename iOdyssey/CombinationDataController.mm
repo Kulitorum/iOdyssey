@@ -112,12 +112,8 @@ using namespace std;
             while ([resultSet moveNext])
 				{
 				Combination *tmp = [[Combination alloc] initWithData:[resultSet getInteger:0] name:[resultSet getString:3]];
-				NSLog(@"RT1:%d", [tmp retainCount]);
 				[views addObject:tmp];
-				NSLog(@"RT2:%d", [tmp retainCount]);
 				[tmp release];
-				NSLog(@"RT3:%d", [tmp retainCount]);
-                cout << ".";
 				}
 			}
 		} else {

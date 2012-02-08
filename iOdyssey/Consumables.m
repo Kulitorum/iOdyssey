@@ -22,9 +22,16 @@
     return self;
 }
 
+@synthesize SC_NAME;
+@synthesize UNIT;
+
+
 @end
 
 @implementation SCG
+
+@synthesize SCG_NAME;
+
 - (id)init
 {
     self = [super init];
@@ -32,6 +39,10 @@
     }
     
     return self;
+}
+
+-(void) dealloc
+{
 }
 
 @end
@@ -97,8 +108,8 @@
 				Consumable *C = [[Consumable alloc] init];
 				SCG *S = [[SCG alloc] init];
 				C->SC_KEY  = [resultSet getInteger: SC_KEY ];
-				C->SC_NAME = [[resultSet getString: SC_NAME] retain];
-				C->UNIT    = [[resultSet getString: UNIT] retain];
+				C->SC_NAME = [resultSet getString: SC_NAME];
+				C->UNIT    = [resultSet getString: UNIT];
 				C->SCG_KEY    = [resultSet getInteger: SCG_KEY];
 				C->QTY = C->newQTY = [resultSet getInteger:QTY];
 				S->SCG_KEY = C->SCG_KEY;

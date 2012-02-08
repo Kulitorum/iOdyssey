@@ -45,7 +45,7 @@ ResourceAndTime *lastPickedResource;
 
 - (void)changeDate:(UIDatePicker *)sender
 {
-	pickedDate=[[sender.date copy] retain];
+	pickedDate=[sender.date retain];
 }
 
 - (void)removeViews:(id)object
@@ -319,35 +319,8 @@ bool BookingSortPredicate(Booking* d1, Booking* d2)
 	//	NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
 	if (query.succeeded)
 		{
-		//		self.buttonWithDateLabel.title = AppDelegate.displayStart.HoursAfter(12).FormatForGanttView(true);
-		
-		/*
-		 NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
-		 for (SqlResultSet *resultSet in query.resultSets)
-		 {
-		 for (int i = 0; i < resultSet.fieldCount; i++)
-		 {
-		 [outputString appendFormat:@"%@ | ", [resultSet nameForField:i]];
-		 }
-		 [outputString appendString:@"\r\n--------\r\n"];
-		 
-		 while ([resultSet moveNext])
-		 {
-		 [outputString appendString:[NSString stringWithFormat:@"COUNT:%d\r\n", count++ ]];
-		 for (int i = 0; i < resultSet.fieldCount; i++)
-		 {
-		 [outputString appendFormat:@"%@ | ", [resultSet getData:i]];
-		 }
-		 [outputString appendString:@"\r\n"];
-		 DLog(@"%@", outputString);
-		 [outputString setString:@""];
-		 }
-		 }
-		 */
-		//		2011-09-30 22:39:23.249 iOdyssey[3888:707] COUNT:82
-		//		Flame / Nuke | 101 | <null> | <null> | <null>  | 642975 | 2011-09-26 09:00:00 +0000 | 2011-09-26 19:00:00 +0000 | 208065 | <null> | <null> | <null>      | Iphone    | Online & Grading | <null>        | V    | 33     | Miso Film Aps | Scanning | 9999 | 		
-		//     Resource      | RE_KEY | STATUS | PCODE | MTYPE | BS_KEY | FROM_TIME                 | TO_TIME                   | BO_KEY | FIRST_NAME | LAST_NAME | NAME | BK_Remark | Folder_name      | Folder_remark | TYPE | RV_KEY | CL_NAME       | ACTIVITY | SITE_KEY | 
 		[AppDelegate->viewData clearBookings];
+		
 		for (SqlResultSet *resultSet in query.resultSets)
 			{
 			/*
@@ -389,32 +362,11 @@ bool BookingSortPredicate(Booking* d1, Booking* d2)
 			
 			while ([resultSet moveNext])
 				{
-				Booking *book = [[Booking alloc] init];
-				
-				//				DLog(@"XCOUNT:%d\n",count++);
-				/*				NSMutableString *outputString  = [[NSMutableString alloc] init];
-				 for (int i = 0; i < resultSet.fieldCount; i++)
-				 [outputString appendFormat:@"%@ | ", [resultSet getData:i]];
-				 [outputString appendString:@"\r\n"];
-				 DLog(@"%@\n",outputString);*/
-				
-				
-				/*
-				Requesting booking data
-				2012-02-07 23:44:39.753 iOdyssey[63257:f803] -[GanttViewController RequestBookingData] [Line 300] SELECT * FROM  vw_staff_schedule WHERE (RV_KEY = 129 OR RE_KEY = 2803) AND FROM_TIME BETWEEN '2012-02-06' AND '2012-02-14' AND SITE_KEY = 44001
-				Got booking data, processing
-				2012-02-07 23:44:39.910 iOdyssey[63257:f803] -[GanttViewController sqlQueryDidFinishExecuting:] [Line 397] Staff 02 (MH) | 2803 | BK | O | 1 | 644412 | 2012-02-06 02:00:00 +0000 | 2012-02-06 03:00:00 +0000 | 208640 | Michael | Holm | Ipad | > 2012-02-07 20:23 - MichaelH iPad/ Iphone
-				
-				
-				Iphone | Everything |  | S | 128 | Big Apple Production | Compositing | 44001 | 
-				
-				2012-02-07 23:44:39.910 iOdyssey[63257:f803] -[GanttViewController sqlQueryDidFinishExecuting:] [Line 397] Staff 02 (MH) | 2803 | BK | O | 1 | 644409 | 2012-02-06 03:45:00 +0000 | 2012-02-06 05:45:00 +0000 | 208637 | Michael | Holm | Ipad | > 2012-02-07 20:21 - MichaelH iPad/ Iphone
-				*/
-				
+				Booking *book = [[[Booking alloc] init] autorelease];
 				book.BO_KEY = [resultSet getInteger:BO_KEY];
 
 				book.RE_KEY = [ resultSet getInteger: RE_KEY ];
-				book.Resource = [[resultSet getString: ResourceKey] copy];
+				book.Resource = [resultSet getString: ResourceKey];
 				
 				//book.STATUS
 				NSString *status = [resultSet getString: STATUS];
@@ -465,65 +417,18 @@ bool BookingSortPredicate(Booking* d1, Booking* d2)
 				book.FROM_TIME = Date([resultSet getDate:FROM_TIME]);
 				book.TO_TIME = Date([resultSet getDate:TO_TIME]);
 				
-				book.FIRST_NAME = [[resultSet getString:FIRST_NAME] copy];
-				if ( ! [book.FIRST_NAME isKindOfClass:[NSString class]])
-					{
-					[book.FIRST_NAME release];
-					book.FIRST_NAME=@"";
-					}
-				book.ACTIVITY = [[resultSet getString:ACTIVITY] copy];
-				if ( ! [book.ACTIVITY isKindOfClass:[NSString class]])
-					{
-					[book.ACTIVITY release];
-					book.ACTIVITY=@"";
-					}
-				if ([book.FIRST_NAME compare:@"<null>"] == NSOrderedSame)   // person
-					book.FIRST_NAME = @"";
-				book.LAST_NAME = [[resultSet getString:LAST_NAME] copy];
-				if ( ! [book.LAST_NAME isKindOfClass:[NSString class]])
-					{
-					[book.LAST_NAME release];
-					book.LAST_NAME=@"";
-					}
-				if ([book.LAST_NAME compare:@"<null>"] == NSOrderedSame)   // person
-					{
-					[book.LAST_NAME release];
-					book.LAST_NAME = @"";
-					}
-				book.NAME = [[resultSet getString:NAME] copy];
-				if ( ! [book.NAME isKindOfClass:[NSString class]])
-					{
-					[book.NAME release];
-					book.NAME=@"";
-					}
-				book.BK_Remark = [[resultSet getString:BK_Remark] copy];
-				if ( ! [book.BK_Remark isKindOfClass:[NSString class]])
-					{
-					[book.BK_Remark release];
-					book.BK_Remark=@"";
-					}
-				book.Folder_name = [[resultSet getString:Folder_name] copy];
-				if ( ! [book.Folder_name isKindOfClass:[NSString class]])
-					{
-					[book.Folder_name release];
-					book.Folder_name=@"";
-					}
-				book.Folder_remark = [[resultSet getString:Folder_remark] copy];
-				if ( ! [book.Folder_remark isKindOfClass:[NSString class]])
-					{
-					[book.Folder_remark release];
-					book.Folder_remark=@"";
-					}
-				book.TYPE = [[resultSet getString:TYPE] copy];
+				book.FIRST_NAME = [resultSet getString:FIRST_NAME];
+				book.ACTIVITY = [resultSet getString:ACTIVITY];
+				book.LAST_NAME = [resultSet getString:LAST_NAME];
+				book.NAME = [resultSet getString:NAME];
+				book.BK_Remark = [resultSet getString:BK_Remark];
+				book.Folder_name = [resultSet getString:Folder_name];
+				book.Folder_remark = [resultSet getString:Folder_remark];
+				book.TYPE = [resultSet getString:TYPE];
 				book.BS_KEY = [resultSet getInteger:BS_KEY];
-				book.CL_NAME = [[resultSet getString:CL_NAME] copy];
-				if ( ! [book.CL_NAME isKindOfClass:[NSString class]])
-					{
-					[book.CL_NAME release];
-					book.CL_NAME=@"";
-					}
+				book.CL_NAME = [resultSet getString:CL_NAME];
+				[book checkIntegrity];
 				[AppDelegate->viewData AddBooking:book LOGGEDIN_RESOURCE_ID: AppDelegate->loginData.Login.RE_KEY];    // Store booking in gantt chart
-				[book release];
 				}
 			}
 		} else {
@@ -1057,19 +962,19 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 	if(isShowingMyBookings)// || isShowingBookingDetailView)
 		return;
 	isShowingMyBookings=YES;
-	NSLog(@"isShowingMyBookings = YES");
+//	NSLog(@"isShowingMyBookings = YES");
 	[self presentModalViewController:AppDelegate.MyBookingsAndDrillDown animated:animated];
 }
 
 -(void)viewDidAppear:(BOOL)animated
 {
-	NSLog(@"isShowingMyBookings 2 = NO");
+//	NSLog(@"isShowingMyBookings 2 = NO");
 	isShowingMyBookings=NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-	NSLog(@"isShowingMyBookings 1 = NO");
+//	NSLog(@"isShowingMyBookings 1 = NO");
 	isShowingMyBookings=NO;
 //	[self.gantt setNeedsDisplay];
 //	[self.gantt setNeedsLayout];
@@ -1341,8 +1246,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 }
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView __OSX_AVAILABLE_STARTING(__MAC_NA,__IPHONE_3_2) // any zoom scale changes
 {
-	NSLog(@"%f", gantt.invisibleScrollView.zoomScale);
-	
+//	NSLog(@"%f", gantt.invisibleScrollView.zoomScale);
 }
 
 // called on start of dragging (may require some time and or distance to move)
@@ -1372,8 +1276,8 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 //	double viewEnd = AppDelegate.displayEnd.nstimeInterval();
 //	float numberOfDaysInView = (viewEnd-viewStart) / (24*60*60);
 
-	NSLog(@"scrollViewWillEndDragging");
-	NSLog(@"	velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
+//	NSLog(@"scrollViewWillEndDragging");
+//	NSLog(@"	velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
 
 	if(1)// fabs(velocity.x) > fabs(velocity.y))	// primarily x motion
 		{
@@ -1386,13 +1290,13 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 			targetContentOffset->x = 0;
 			}
 		}
-	NSLog(@"*********velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
+//	NSLog(@"*********velocity.x:%f target:%f\n",velocity.x, targetContentOffset->x);
 }
 
 // called on finger up if the user dragged. decelerate is true if it will continue moving afterwards
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-	NSLog(@"scrollViewDidEndDragging");
+//	NSLog(@"scrollViewDidEndDragging");
 	if(decelerate)
 		{
 		// where will we end?
@@ -1409,7 +1313,7 @@ float distanceBetweenTwoPoints(float fromPoint, float toPoint)
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView      // called when scroll view grinds to a halt
 {
-	NSLog(@"scrollViewDidEndDecelerating at X:%f", scrollView.contentOffset.x);
+//	NSLog(@"scrollViewDidEndDecelerating at X:%f", scrollView.contentOffset.x);
 	float RESOURCENAMEWIDTH = AppDelegate->ganttviewcontroller.gantt.RESOURCENAMEWIDTH;
 	[scrollView setContentOffset:CGPointMake(1024-RESOURCENAMEWIDTH,scrollView.contentOffset.y)];	// reset
 	// Snap to 00:00

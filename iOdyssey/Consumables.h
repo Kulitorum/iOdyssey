@@ -22,6 +22,11 @@ using namespace std;
 	int QTY;
 	int newQTY;
 };
+
+@property (nonatomic, retain) NSString *SC_NAME;
+@property (nonatomic, retain) NSString *UNIT;
+
+
 @end
 
 @interface SCG : NSObject
@@ -31,6 +36,9 @@ using namespace std;
 	NSString *SCG_NAME;
 	NSMutableArray *items;
 };
+
+@property (nonatomic, retain) NSString *SCG_NAME;
+
 @end
 
 

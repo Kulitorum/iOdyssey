@@ -15,6 +15,31 @@
 #include <iostream>
 #include <string>
 
+@implementation LoginDataContainer
+
+@synthesize PASSWRD;
+@synthesize USERNAME;
+@synthesize FULL_NAME;
+@synthesize GROUP_NAME;
+@synthesize SITE_NAME;
+@synthesize LEGAL_ENTIRY;
+@synthesize SECTION;
+@synthesize DESCRIPTION1;
+@synthesize ACCESS_RIGHTS;	// Bool
+@synthesize SITE_KEY;		// Shortcut, use when requesting booking and resource data, "AND SITE_KEY=%d"
+@synthesize USER_KEY;		// Whoami
+@synthesize STAFF_CL_KEY;   // index into client database
+@synthesize RE_KEY;			// 1543
+
+-(void) clear
+{
+	PASSWRD = USERNAME = FULL_NAME = GROUP_NAME = SITE_NAME = LEGAL_ENTIRY = SECTION = DESCRIPTION1 = @"";
+	USER_KEY = STAFF_CL_KEY = RE_KEY = SITE_KEY = -1;
+}
+
+@end
+
+
 @implementation LoginData
 
 @synthesize loginName, password, Login;
@@ -42,13 +67,15 @@
 - (id)init
 {
 	self=[super init];
-    if (self){
+    if (self)
+		{
+		Login = [[LoginDataContainer alloc] init];
 		}
 	return self;
 }
 -(void) Clear
 {
-	Login.clear();
+	[Login clear];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex 
@@ -94,35 +121,35 @@
 		while ([resultSet moveNext])
 			{
 			try{
-				Login.clear();
-				Login.USER_KEY = [ resultSet getInteger: USER_KEY ];
+				[Login clear];
+				Login.USER_KEY = [resultSet getInteger: USER_KEY ];
 				Login.STAFF_CL_KEY = [ resultSet getInteger: STAFF_CL_KEY ];
 				Login.RE_KEY = [ resultSet getInteger: RE_KEY ];
 				Login.SITE_KEY = [ resultSet getInteger: SITE_KEY ];
 				Login.ACCESS_RIGHTS = [ resultSet getInteger: ACCESS_RIGHTS ];
 
-				Login.PASSWRD = [[resultSet getString:PASSWRD] copy];
+				Login.PASSWRD = [[resultSet getString:PASSWRD] retain];
 				if ( ! [Login.PASSWRD isKindOfClass:[NSString class]])
 					Login.PASSWRD=@"";
-				Login.USERNAME = [[resultSet getString:USERNAME] copy];
+				Login.USERNAME = [[resultSet getString:USERNAME] retain];
 				if ( ! [Login.USERNAME isKindOfClass:[NSString class]])
 					Login.USERNAME=@"";
-				Login.FULL_NAME = [[resultSet getString:FULL_NAME] copy];
+				Login.FULL_NAME = [[resultSet getString:FULL_NAME] retain];
 				if ( ! [Login.FULL_NAME isKindOfClass:[NSString class]])
 					Login.FULL_NAME=@"";
-				Login.GROUP_NAME = [[resultSet getString:GROUP_NAME] copy];
+				Login.GROUP_NAME = [[resultSet getString:GROUP_NAME] retain];
 				if ( ! [Login.GROUP_NAME isKindOfClass:[NSString class]])
 					Login.GROUP_NAME=@"";
-				Login.SITE_NAME = [[resultSet getString:SITE_NAME] copy];
+				Login.SITE_NAME = [[resultSet getString:SITE_NAME] retain];
 				if ( ! [Login.SITE_NAME isKindOfClass:[NSString class]])
 					Login.SITE_NAME=@"";
-				Login.LEGAL_ENTIRY = [[resultSet getString:LEGAL_ENTIRY] copy];
+				Login.LEGAL_ENTIRY = [[resultSet getString:LEGAL_ENTIRY] retain];
 				if ( ! [Login.LEGAL_ENTIRY isKindOfClass:[NSString class]])
 					Login.LEGAL_ENTIRY=@"";
-				Login.SECTION = [[resultSet getString:SECTION] copy];
+				Login.SECTION = [[resultSet getString:SECTION] retain];
 				if ( ! [Login.SECTION isKindOfClass:[NSString class]])
 					Login.SECTION=@"";
-				Login.DESCRIPTION1 = [[resultSet getString:DESCRIPTION1] copy];
+				Login.DESCRIPTION1 = [[resultSet getString:DESCRIPTION1] retain];
 				if ( ! [Login.DESCRIPTION1 isKindOfClass:[NSString class]])
 					Login.DESCRIPTION1=@"";
 			} // try

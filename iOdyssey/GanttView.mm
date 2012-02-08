@@ -64,7 +64,7 @@ void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef
 					Resource* ting = [[Resource alloc] initWithName:@"" ID:-1];
 					NSString *sName = [ resultSet getString: [resultSet indexForField:@"HEADER_TXT"] ];
 					if ([sName isKindOfClass:[NSString class]])
-						ting.RE_NAME=[sName copy];
+						ting.RE_NAME=[sName retain];
 					[AppDelegate->viewData AddResource:ting];
 					[ting release];
 					}
@@ -78,9 +78,9 @@ void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef
 							{
 							NSString *sName = [ resultSet getString: indexOfName ];
 							if ([sName isKindOfClass:[NSString class]])
-								name = [sName copy];
+								name = [sName retain];
 							else
-								name = [[resultSet getString: [resultSet indexForField:@"RE_NAME"]] copy];
+								name = [[resultSet getString: [resultSet indexForField:@"RE_NAME"]] retain];
 							}
 						}
 					else
@@ -108,31 +108,10 @@ void DrawBooking(CGRect rectangle, Booking *book, float y, float h, CGContextRef
 					}
 				}
 			}
-		// make sure the current login resource is there too
-		/*		bool hasMe=NO;
-		 iOdysseyAppDelegate *asd = AppDelegate;
-		 for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-		 {
-		 if(AppDelegate->viewData.Resources[i].RE_KEY == AppDelegate->loginData.Login.RE_KEY)
-		 {
-		 hasMe = YES;
-		 break;
-		 }
-		 }
-		 if(hasMe == NO) // Add me
-		 {
-		 Resource ting(AppDelegate->loginData.Login.FULL_NAME,AppDelegate->loginData.Login.RE_KEY);
-		 AppDelegate->viewData.AddResource(ting);
-		 }*/
 		} else {
 			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Network connection lost. Please try again." message:query.errorText delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];    [alert show];
 			[alert release];   
 		}
-	
-	// check resources
-	//	for(size_t i=0;i<AppDelegate->viewData.Resources.size();i++)
-	//	cout << "             " << [AppDelegate->viewData.Resources[i].RE_NAME UTF8String] << endl;
-	
 	
 	if([AppDelegate RequestNextDataType] == NO)
 		[AppDelegate->ganttviewcontroller RequestBookingData];

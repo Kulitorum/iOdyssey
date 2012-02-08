@@ -111,7 +111,10 @@
 					ClientInfo *C = [[ClientInfo alloc] init];
 					C.CL_KEY = [ resultSet getInteger: CL_KEY ];
 					if(C.CL_KEY <= 0)
+						{
+						[ClientInfo release];
 						continue;
+						}
 					
 					NSString *NAME = [resultSet getString: CL_NAME];
 					if(NAME != nil && ([NAME isKindOfClass:[NSString class]] == YES))
@@ -122,6 +125,7 @@
 						continue;
 						}
 					[clients addObject:C];
+					[ClientInfo release];
 					[C release];
 					}
 				

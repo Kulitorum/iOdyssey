@@ -86,6 +86,10 @@ enum PCODE{P_UNKNOWN, P_OPEN, P_FINISHED, P_APPROVED, P_PRECALC, P_PROFORMA, P_I
 -(bool) overlaps:(Booking*) other;
 -(bool) overlapsDate:(Date)time;
 -(bool) endsBefore:(Date) time;
+-(void) checkIntegrity;
+
+-(Date*) fromTimePtr;
+-(Date*) toTimePtr;
 
 - (NSComparisonResult)startsEarlierThen:(Booking *)otherObject;
 @end

@@ -98,113 +98,68 @@
         return true;
 	return false;
 }
-/*
-void Booking::CopyFrom(const Booking &b)
+
+-(id) init
 {
-	Resource = [[b.Resource copy] retain];
-    RE_KEY = b.RE_KEY;
-    STATUS = b.STATUS;
-	pcode = b.pcode;
-	MTYPE = b.MTYPE;
-	BS_KEY = b.BS_KEY;
-	BO_KEY = b.BO_KEY;
-	FIRST_NAME = [[b.FIRST_NAME copy] retain];
-	LAST_NAME = [[b.LAST_NAME copy] retain];
-	NAME = [[b.NAME copy] retain];
-	ACTIVITY = [[b.ACTIVITY copy] retain];
-	BK_Remark = [[b.BK_Remark copy] retain];
-	Folder_name = [[b.Folder_name copy] retain];
-	Folder_remark = [[b.Folder_remark copy] retain];
-	TYPE = [[b.TYPE copy] retain];
-	FROM_TIME = b.FROM_TIME;
-	TO_TIME = b.TO_TIME;
-	CL_NAME = [[b.CL_NAME copy] retain];
-	pickRectangle = b.pickRectangle;
-	BOKEYSELECTED = b.BOKEYSELECTED;
-}
-*/
-//Copy constructor
-/*
-Booking::Booking(const Booking &b)
-{
-	Resource = b.Resource;
-    RE_KEY = b.RE_KEY;
-    STATUS = b.STATUS;
-	pcode = b.pcode;
-	MTYPE = b.MTYPE;
-	BS_KEY = b.BS_KEY;
-	BO_KEY = b.BO_KEY;
-	FIRST_NAME = b.FIRST_NAME;
-	LAST_NAME = b.LAST_NAME;
-	NAME = b.NAME;
-	ACTIVITY=b.ACTIVITY;
-	BK_Remark = b.BK_Remark;
-	Folder_name = b.Folder_name;
-	Folder_remark = b.Folder_remark;
-	TYPE = b.TYPE;
-	FROM_TIME = b.FROM_TIME;
-	TO_TIME = b.TO_TIME;
-	CL_NAME = b.CL_NAME;
-	pickRectangle = b.pickRectangle;
-	BOKEYSELECTED = NO;
+	self = [super init];
+	if(self)
+		{
+		Resource=FIRST_NAME=LAST_NAME=NAME=ACTIVITY=BK_Remark=Folder_name=Folder_remark=TYPE=CL_NAME=nil;
+		}
+	return self;
 }
 
--(bool) Booking::IsSameAs(Booking &other)
+-(void) checkIntegrity
 {
-	if(STATUS != other.STATUS) { cout << "STATUS changed state" << endl ; return NO;}
-	if(pcode != other.pcode) { cout << "pcode changed state" << endl ; return NO;}
-	if(MTYPE != other.MTYPE) { cout << "MTYPE changed state" << endl ; return NO;}
-
-	if(RE_KEY != other.RE_KEY) { cout << "RE_KEY changed state" << endl ; return NO;}
-	if(BS_KEY != other.BS_KEY) { cout << "BS_KEY changed state" << endl ; return NO;}
-	if(BO_KEY != other.BO_KEY) { cout << "BO_KEY changed state" << endl ; return NO;}
-	
-	if(FROM_TIME.nstimeInterval() != other.FROM_TIME.nstimeInterval()) 
-		{ cout << "FROM_TIME changed state" << endl ; return NO;}
-	if(TO_TIME.nstimeInterval() != other.TO_TIME.nstimeInterval()) 
-		{ cout << "TO_TIME changed state" << endl ; return NO;}
-	if ([Resource compare:other.Resource] != NSOrderedSame) 
-		{ cout << "Resource changed state" << endl ; return NO;}
-	if ([FIRST_NAME compare:other.FIRST_NAME] != NSOrderedSame) 
-		{ cout << "FIRST_NAME changed state" << endl ; return NO;}
-	if ([LAST_NAME compare:other.LAST_NAME] != NSOrderedSame) 
-		{ cout << "LAST_NAME changed state" << endl ; return NO;}
-	if ([NAME compare:other.NAME] != NSOrderedSame)
-		{ cout << "NAME changed state" << endl ; return NO;}
-	if ([ACTIVITY compare:other.ACTIVITY] != NSOrderedSame) 
-		{ cout << "ACTIVITY changed state" << endl ; return NO;}
-	if ([BK_Remark compare:other.BK_Remark] != NSOrderedSame) 
-		{ cout << "BK_Remark changed state" << endl ; return NO;}
-	if ([Folder_name compare:other.Folder_name] != NSOrderedSame) 
-		{ cout << "Folder_name changed state" << endl ; return NO;}
-	if ([Folder_remark compare:other.Folder_remark] != NSOrderedSame) 
-		{ cout << "Folder_remark changed state" << endl ; return NO;}
-	if ([TYPE compare:other.TYPE] != NSOrderedSame) 
-		{ cout << "TYPE changed state" << endl ; return NO;}
-	if ([CL_NAME compare:other.CL_NAME] != NSOrderedSame) 
-		{ cout << "CL_NAME changed state" << endl ; return NO;}
-
-	return YES;
+	if(Resource==nil || ![Resource isKindOfClass:[NSString class]])
+		Resource=@"";
+	if(FIRST_NAME==nil || ![FIRST_NAME isKindOfClass:[NSString class]])
+		FIRST_NAME=@"";
+	if(LAST_NAME==nil || ![LAST_NAME isKindOfClass:[NSString class]])
+		LAST_NAME=@"";
+	if(NAME==nil || ![NAME isKindOfClass:[NSString class]])
+		NAME=@"";
+	if(ACTIVITY==nil || ![ACTIVITY isKindOfClass:[NSString class]])
+		ACTIVITY=@"";
+	if(BK_Remark==nil || ![BK_Remark isKindOfClass:[NSString class]])
+		BK_Remark=@"";
+	if(Folder_name==nil || ![Folder_name isKindOfClass:[NSString class]])
+		Folder_name=@"";
+	if(Folder_remark==nil || ![Folder_remark isKindOfClass:[NSString class]])
+		Folder_remark=@"";
+	if(TYPE==nil || ![TYPE isKindOfClass:[NSString class]])
+		TYPE=@"";
+	if(CL_NAME==nil || ![CL_NAME isKindOfClass:[NSString class]])
+		CL_NAME=@"";
 }
-*/
+
 -(void) dealloc
 {
     // booking data
-    [Resource release];		// Visual Effects/ Colorist06
-    [FIRST_NAME release];	// Michael 
-    [LAST_NAME release];	// Holm
-    [NAME release];			// Proejct name
-    [ACTIVITY release];		// Online/CC/Effect
-    [BK_Remark release];	// remarks
-    [Folder_name release];	// Project
-    [Folder_remark release];// info on project
-    [TYPE release];			// S=people | V=machines
+	[Resource release];		// Visual Effects/ Colorist06
+	[FIRST_NAME release];	// Michael 
+	[LAST_NAME release];	// Holm
+	[NAME release];			// Proejct name
+	[ACTIVITY release];		// Online/CC/Effect
+	[BK_Remark release];	// remarks
+	[Folder_name release];	// Project
+	[Folder_remark release];// info on project
+	[TYPE release];			// S=people | V=machines
 	[CL_NAME release];		// client name
 }
 
 - (NSComparisonResult)startsEarlierThen:(Booking *)otherObject
 {
     return FROM_TIME.nstimeInterval() < otherObject.FROM_TIME.nstimeInterval();
+}
+
+-(Date*) fromTimePtr
+{
+	return &FROM_TIME;
+}
+-(Date*) toTimePtr
+{
+	return &TO_TIME;
 }
 
 

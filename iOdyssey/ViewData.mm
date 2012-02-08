@@ -70,16 +70,21 @@
 
 -(void) deleteBookings
 {
+	if([bookings count] == 0)
+		return;
+	Booking*b = [bookings objectAtIndex:0];
+	NSLog(@"Booking RT:%d", [b retainCount]);
 	[bookings removeAllObjects];
+	NSLog(@"Booking RT:%d", [b retainCount]);
 }
 
 -(void) sortBookingsByStartDate
 {
 //	NSArray *sortedArray = [[NSMutableArray alloc] init];
 	NSArray* sortedArray = [bookings sortedArrayUsingSelector:@selector(startsEarlierThen:)];
-	[bookings removeAllObjects];
 	[bookings release];
 	bookings = [sortedArray mutableCopy];
+//	[sortedArray release];
 //	[sortedArray release];
 }
 
@@ -140,7 +145,12 @@
 					hasBooking=YES;
 				}
 			if(hasBooking == NO)
+				{
+				
+				NSLog(@"RT1:%d", [book.Folder_remark retainCount]);
 				[res.bookings addObject:book];
+				NSLog(@"RT2:%d", [book.Folder_remark retainCount]);
+				}
             return;
 			}
 		}

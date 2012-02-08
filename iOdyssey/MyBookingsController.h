@@ -29,7 +29,6 @@ using namespace std;
 	PreferencesController *preferencesController;
 	UIViewController *aboutController;
 
-
 	vector<int> BookingsPrDay;
 }
 -(void) RefreshView;

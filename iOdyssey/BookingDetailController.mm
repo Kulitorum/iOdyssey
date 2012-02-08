@@ -207,8 +207,8 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result)
     else
 		constraintSize = CGSizeMake(280.0f, MAXFLOAT);
     CGSize labelSize = [cellText sizeWithFont:cellFont constrainedToSize:constraintSize lineBreakMode:UILineBreakModeWordWrap];
+	[bookings release];
     return labelSize.height + 20;
-
 }
 /*
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -232,6 +232,7 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result)
 		[bookings release];
         return 2;	// start, end
 		}
+	[bookings release];
     return 1;
 }
 
@@ -262,6 +263,7 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result)
 	   [bookings release];
 	   return result;
 	   }
+	[bookings release];
    return @"Booking Info";
 }
 
@@ -368,8 +370,8 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result)
     commentcell.selectionStyle = UITableViewCellSelectionStyleNone;
     [commentcell.textLabel sizeToFit];
     
+	[bookings release];
     return commentcell;
-
 }
 
 -(IBAction) AddComment

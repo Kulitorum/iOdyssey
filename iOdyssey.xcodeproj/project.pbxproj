@@ -329,8 +329,6 @@
 		0597DB6313C4FF280098D115 /* Login Controller */ = {
 			isa = PBXGroup;
 			children = (
-				053380A813BF208A00B8C2EA /* LoginData.mm */,
-				053380A913BF208A00B8C2EA /* LoginData.h */,
 				0597DB6C13C504790098D115 /* LoginController.h */,
 				0597DB6D13C504790098D115 /* LoginController.mm */,
 			);
@@ -502,6 +500,8 @@
 			children = (
 				0597DB6B13C504430098D115 /* UITableViewCells */,
 				05AC0AA813BF1AE600148073 /* Combinations */,
+				053380A913BF208A00B8C2EA /* LoginData.h */,
+				053380A813BF208A00B8C2EA /* LoginData.mm */,
 				057CAA0613B3EAD300F8EE47 /* ViewData.h */,
 				057CAA0513B3EAD300F8EE47 /* ViewData.mm */,
 				05A9DC6813AD620A00CEECED /* Booking.h */,
@@ -853,6 +853,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -871,6 +872,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
 				GCC_VERSION = "";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;

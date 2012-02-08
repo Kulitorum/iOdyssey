@@ -86,7 +86,7 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result);
 	
 	if(runningCommandsCounter == 0)
 		[self CloseBooking];
-    
+    [bookings release];
 }
 
 - (void)sqlQueryDidFinishExecuting:(SqlClientQuery *)query
@@ -257,18 +257,17 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	float result;
 	NSMutableArray *bookings = [[NSMutableArray alloc] init];
 	FindResourcesForBookingID(book.BO_KEY, bookings);
-    if(indexPath.section < [bookings count])
-		if(AppDelegate.IsIpad)
-			result=65;	// start, end
-		else
-			result=55;
-	result=40;// Consumables
-	
+	int count = [bookings count];
 	[bookings release];
-	return result;
+	bookings=nil;
+    if(indexPath.section < count)
+		if(AppDelegate.IsIpad)
+			return 65;	// start, end
+		else
+			return 55;
+	return 40;
 }
 /*
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -379,14 +378,12 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result);
 				case 0:	// EditableDateCell start
 				[[cell Title] setText:@"Start"];
 				[[cell dateLabel] setText: b.FROM_TIME.FormatForSignOffController() ];
-				NSLog(@"THERE IS A BUG HERE, THE DATE POINTER IS NOT SET");
-//				[cell setDate:b.FROM_TIME];
+				[cell setDate:[b fromTimePtr]];
 				break;
 				case 1:	// EditableDateCell start
 				[[cell Title] setText:@"End"];
 				[[cell dateLabel] setText: b.TO_TIME.FormatForSignOffController() ];
-				NSLog(@"THERE IS A BUG HERE, THE DATE POINTER IS NOT SET");
-//				[cell setDate:&bookings[indexPath.section].TO_TIME];
+				[cell setDate:[b toTimePtr]];
 				break;
 			}
 		return cell;
@@ -416,7 +413,10 @@ void FindResourcesForBookingID( int BO_KEY, NSMutableArray *result);
 		}
 	//	[[cell name] setText:@"qwe"];
 	if(consumables == nil || consumables->ServiceGroups == nil)
+		{
+		[bookings release];
 		return cell;
+		}
 
 	int serviceGroupNr = indexPath.section-[bookings count];
 	SCG* S = ((SCG*)[consumables->ServiceGroups objectAtIndex:serviceGroupNr]);

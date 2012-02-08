@@ -13,17 +13,8 @@
 
 using namespace std;
 
-class LoginDataContainer
+@interface LoginDataContainer : NSObject
 {
-public:
-	LoginDataContainer(){}
-	
-	void clear()
-	{
-	PASSWRD = USERNAME = FULL_NAME = GROUP_NAME = SITE_NAME = LEGAL_ENTIRY = SECTION = DESCRIPTION1 = @"";
-	USER_KEY = STAFF_CL_KEY = RE_KEY = SITE_KEY = -1;
-	}
-	
 	NSString *PASSWRD;
 	NSString *USERNAME;
 	NSString *FULL_NAME;
@@ -39,18 +30,36 @@ public:
 	int RE_KEY;			// 1543
 };
 
+@property (nonatomic, retain) NSString *PASSWRD;
+@property (nonatomic, retain) NSString *USERNAME;
+@property (nonatomic, retain) NSString *FULL_NAME;
+@property (nonatomic, retain) NSString *GROUP_NAME;
+@property (nonatomic, retain) NSString *SITE_NAME;
+@property (nonatomic, retain) NSString *LEGAL_ENTIRY;
+@property (nonatomic, retain) NSString *SECTION;
+@property (nonatomic, retain) NSString *DESCRIPTION1;
+@property int ACCESS_RIGHTS;	// Bool
+@property int SITE_KEY;		// Shortcut, use when requesting booking and resource data, "AND SITE_KEY=%d"
+@property int USER_KEY;		// Whoami
+@property int STAFF_CL_KEY;   // index into client database
+@property int RE_KEY;			// 1543
+
+-(void) clear;
+
+
+@end
 
 @interface LoginData : NSObject <SqlClientDelegate, UIAlertViewDelegate>
 {
 	NSString* loginName;
 	NSString* password;
-	LoginDataContainer Login;
+	LoginDataContainer *Login;
 }
 
 //@property (nonatomic, retain) IBOutlet GanttView *gantt;
 @property (nonatomic, retain) NSString* loginName;
 @property (nonatomic, retain) NSString* password;
-@property LoginDataContainer Login;
+@property (nonatomic, retain) LoginDataContainer *Login;
 
 
 -(IBAction) RequestLoginData;
