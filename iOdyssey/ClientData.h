@@ -16,16 +16,20 @@
 
 using namespace std;
 
-class ClientInfo
+@interface ClientInfo : NSObject
 {
-public:
 	int CL_KEY;
 	NSString *CL_NAME;
 };
 
+@property int CL_KEY;
+@property (nonatomic, retain) NSString *CL_NAME;
+
+@end
+
 @interface ClientData : NSObject<SqlClientDelegate>
 {
-	vector<ClientInfo> clients;
+	NSMutableArray *clients;
 }
 
 - (void)RequestClientData;

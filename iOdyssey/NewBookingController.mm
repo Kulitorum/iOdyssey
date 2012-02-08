@@ -261,9 +261,9 @@
 	for(int i=0;i<[AppDelegate.clientData Count];i++)
 		{
 		ClientInfo *C = [AppDelegate.clientData GetClientByIndex:i];
-		if([pickedClient compare:C->CL_NAME] == NSOrderedSame)
+		if([pickedClient compare:C.CL_NAME] == NSOrderedSame)
 			{
-			CL_KEY = C->CL_KEY;
+			CL_KEY = C.CL_KEY;
 			break;
 			}
 		}

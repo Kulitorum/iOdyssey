@@ -83,9 +83,9 @@
 		ClientInfo *C = [AppDelegate.clientData GetClientByIndex:i++];
 		
 		//		for(int i=0;i<[AppDelegate.clientData Count]; i++)
-		while(C != nil && ![C->CL_NAME hasPrefix:stopLetter] )
+		while(C != nil && ![C.CL_NAME hasPrefix:stopLetter] )
 			{
-			[startsWith addObject:C->CL_NAME];
+			[startsWith addObject:C.CL_NAME];
 			C = [AppDelegate.clientData GetClientByIndex:i++];
 			}
 		i--;

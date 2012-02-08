@@ -12,6 +12,30 @@
 #import "SqlResultSet.h"
 #import "SqlClientQuery.h"
 
+
+@implementation ClientInfo
+
+@synthesize CL_KEY;
+@synthesize CL_NAME;
+
+
+- (id)init
+{
+    self = [super init];
+    if (self)
+		{
+		}
+    
+    return self;
+}
+
+-(void) dealloc
+{
+	[CL_NAME release];
+}
+
+@end
+
 @implementation ClientData
 
 
@@ -24,23 +48,30 @@
     
     return self;
 }
+
+-(void) dealloc
+{
+	[clients release];
+	clients=nil;
+}
+
 -(ClientInfo*)GetClient:(int) CL_KEY
 {
-	for(int i=0;i<clients.size();i++)
-		if(clients[i].CL_KEY == CL_KEY)
-			return &clients[i];
-	return &clients[0];
+	for(int i=0;i<[clients count];i++)
+		if( ((ClientInfo*)[clients objectAtIndex:i]).CL_KEY == CL_KEY)
+			return [clients objectAtIndex:i];
+	return [clients objectAtIndex:0];
 }
 
 -(ClientInfo*)GetClientByIndex:(int)index
 {
-	if(index >= clients.size())
+	if(index >= [clients count])
 		return nil;
-	return &clients[index];
+	return [clients objectAtIndex:index];
 }
 -(int)Count
 {
-	return clients.size();
+	return [clients count];
 }
 
 - (void)RequestClientData
@@ -53,6 +84,11 @@
 
 - (void)sqlQueryDidFinishExecuting:(SqlClientQuery *)query
 {
+	if(clients==nil)
+		clients = [[NSMutableArray alloc] init];
+	else
+		[clients removeAllObjects];
+	
 	cout << "Got Client Data, Processing" << endl;
 	//	NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
 //	NSMutableString *outputString = [NSMutableString stringWithCapacity:1024];
@@ -70,10 +106,9 @@
 				NSInteger CL_KEY = [resultSet indexForField:@"CL_KEY"];
 				NSInteger CL_NAME = [resultSet indexForField:@"CL_NAME"];
 				
-				ClientInfo C;
-				
 				while ([resultSet moveNext])
 					{
+					ClientInfo *C = [[ClientInfo alloc] init];
 					C.CL_KEY = [ resultSet getInteger: CL_KEY ];
 					if(C.CL_KEY <= 0)
 						continue;
@@ -82,15 +117,20 @@
 					if(NAME != nil && ([NAME isKindOfClass:[NSString class]] == YES))
 						C.CL_NAME = [NAME retain];
 					else
+						{
+						[C release];
 						continue;
-					clients.push_back(C);
+						}
+					[clients addObject:C];
+					[C release];
 					}
 				
 				}
-		ClientInfo C;
+		ClientInfo *C = [[ClientInfo alloc] init];
 		C.CL_KEY = 0;
 		C.CL_NAME=@"[";
-		clients.push_back(C);// end of AA
+		[clients addObject:C];
+		[C release];
 		}
 	else
 		{
